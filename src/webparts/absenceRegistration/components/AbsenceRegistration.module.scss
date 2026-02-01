@@ -1,0 +1,823 @@
+// Innovater Design System
+// Colors based on Innovater branding
+
+// Brand colors - Primary Blue
+$innovater-blue: #004e6b;
+$innovater-blue-dark: #003a50;
+$innovater-blue-light: #0073a0;
+$innovater-header-bg: #1a2a33;
+
+// Legacy green (kept for reference)
+$innovater-green: #5a6e3a;
+$innovater-green-dark: #4a5c2e;
+
+// Status colors
+$status-draft: #f5a623;
+$status-pending: #f5a623;
+$status-approved: #4caf50;
+$status-rejected: #e74c3c;
+
+// UI colors
+$error-bg: #fde8e8;
+$error-border: #c0392b;
+$error-text: #c0392b;
+$info-bg: #fff8e6;
+$info-border: #f0ad4e;
+$neutral-light: #f5f5f5;
+$neutral-lighter: #fafafa;
+$neutral-border: #e0e0e0;
+$text-primary: #333333;
+$text-secondary: #666666;
+$white: #ffffff;
+
+.absenceRegistration {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: $white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  // Top header bar (dark)
+  .headerBar {
+    background-color: $innovater-header-bg;
+    color: $white;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .headerActions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .headerButton {
+      background: none;
+      border: none;
+      color: $white;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 2px;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      &.saveButton {
+        background-color: $status-draft;
+        color: $text-primary;
+        font-weight: 600;
+      }
+    }
+
+    .headerRight {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+
+  // Status badge at top
+  .statusSection {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+
+    .statusBadgeLarge {
+      display: inline-block;
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: 600;
+
+      &.draft {
+        background-color: #f0f0f0;
+        color: #666666;
+      }
+
+      &.pending {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      &.approved {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      &.rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    }
+  }
+
+  // Logo section
+  .logoSection {
+    padding: 0 24px 16px;
+
+    .logo {
+      height: 56px;
+      width: auto;
+      display: block;
+    }
+
+    .logoText {
+      font-size: 28px;
+      font-weight: 400;
+      letter-spacing: 3px;
+      color: $innovater-blue;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+
+      &::before {
+        content: '•';
+        color: $status-draft;
+        margin-right: 2px;
+      }
+
+      &::after {
+        content: '.';
+        color: $status-draft;
+      }
+    }
+  }
+
+  // Tabs styling
+  .tabs {
+    position: relative;
+    background-color: $white;
+    padding: 0;
+    margin: 0 24px;
+
+    :global(.ms-Pivot) {
+      border-bottom: 1px solid $neutral-border;
+    }
+
+    :global(.ms-Pivot-link) {
+      padding: 12px 20px !important;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: $text-secondary;
+      background-color: transparent;
+      margin: 0 4px 0 0 !important;
+      border: 1px solid transparent !important;
+      border-radius: 4px 4px 0 0;
+      box-sizing: border-box;
+      position: relative;
+      top: 0 !important;
+      transition: color 0.2s ease, background-color 0.2s ease;
+
+      &:hover {
+        color: $innovater-blue;
+        background-color: $neutral-lighter;
+        border-color: $neutral-border !important;
+        border-bottom-color: $neutral-lighter !important;
+      }
+
+      &.is-selected,
+      &[aria-selected="true"] {
+        color: $innovater-blue;
+        background-color: $neutral-lighter;
+        border-color: $neutral-border !important;
+        border-bottom-color: $neutral-lighter !important;
+      }
+    }
+
+    :global(.ms-Pivot-icon) {
+      margin-right: 8px;
+    }
+
+    // Item count badge styling
+    :global(.ms-Pivot-count) {
+      background-color: $status-pending;
+      color: $white;
+      border-radius: 10px;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 6px;
+    }
+  }
+
+  .tabContent {
+    padding: 24px;
+    position: relative;
+  }
+
+  // Form section
+  .formSection {
+    .sectionTitle {
+      font-size: 14px;
+      font-weight: 700;
+      color: $innovater-blue;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+  }
+
+  // Form row layout
+  .formRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 20px;
+
+    .formField {
+      flex: 1;
+      min-width: 280px;
+
+      label {
+        display: block;
+        font-weight: 600;
+        font-size: 13px;
+        margin-bottom: 8px;
+        color: $text-primary;
+
+        .required {
+          color: $error-text;
+          margin-left: 2px;
+        }
+      }
+    }
+
+    &.fullWidth .formField {
+      flex: 100%;
+    }
+  }
+
+  // Employee field with avatar
+  .employeeDisplay {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+
+    .avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background-color: $neutral-light;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid $neutral-border;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .initials {
+        font-size: 11px;
+        font-weight: 600;
+        color: $text-secondary;
+      }
+    }
+
+    .name {
+      font-size: 14px;
+      color: $text-primary;
+    }
+  }
+
+  // Read-only field
+  .fieldValue {
+    padding: 8px 12px;
+    background-color: $neutral-light;
+    border: 1px solid $neutral-border;
+    border-radius: 4px;
+    min-height: 36px;
+    font-size: 14px;
+    color: $text-primary;
+    display: flex;
+    align-items: center;
+  }
+
+  // Error field state
+  .fieldError {
+    background-color: $error-bg;
+    border-color: $error-border;
+
+    .errorMessage {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: $error-text;
+      font-size: 13px;
+
+      .errorIcon {
+        font-size: 14px;
+      }
+    }
+  }
+
+  // Days display
+  .daysDisplay {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .daysValue {
+      display: inline-block;
+      padding: 8px 16px;
+      background-color: $neutral-light;
+      border-radius: 4px;
+      font-size: 14px;
+      color: $text-primary;
+      min-width: 60px;
+    }
+
+    .infoIcon {
+      color: $text-secondary;
+      cursor: help;
+      font-size: 14px;
+    }
+  }
+
+  // Absence type options
+  .absenceTypeGroup {
+    :global(.ms-ChoiceFieldGroup-flexContainer) {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px 32px;
+    }
+
+    :global(.ms-ChoiceField) {
+      margin: 0;
+      min-width: 140px;
+    }
+
+    :global(.ms-ChoiceField-field) {
+      &::before {
+        border-color: $neutral-border;
+        border-width: 1px;
+      }
+
+      &:hover::before {
+        border-color: $innovater-blue;
+      }
+    }
+
+    :global(.ms-ChoiceField.is-checked .ms-ChoiceField-field::after) {
+      background-color: $innovater-blue;
+      border-color: $innovater-blue;
+    }
+  }
+
+  // Notes textarea
+  .notesField {
+    width: 100%;
+
+    :global(.ms-TextField-fieldGroup) {
+      border: 1px solid $neutral-border;
+      border-radius: 4px;
+
+      &:hover {
+        border-color: darken($neutral-border, 10%);
+      }
+
+      &:focus-within {
+        border-color: $innovater-blue;
+      }
+    }
+
+    :global(textarea) {
+      min-height: 100px;
+      font-size: 14px;
+      padding: 12px;
+    }
+  }
+
+  // Info message box
+  .infoMessage {
+    background-color: $info-bg;
+    border-left: 4px solid $info-border;
+    padding: 16px;
+    margin: 24px 0;
+    font-size: 13px;
+    font-style: italic;
+    color: $text-primary;
+    line-height: 1.6;
+  }
+
+  // Admin toggle section
+  .adminSection {
+    margin: 24px 0;
+    padding-top: 16px;
+    border-top: 1px solid $neutral-border;
+
+    .adminLabel {
+      font-size: 13px;
+      color: $text-secondary;
+      margin-bottom: 8px;
+    }
+  }
+
+  // Button row
+  .buttonRow {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+
+    :global(.ms-Button) {
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 13px;
+      padding: 8px 16px;
+      min-width: auto;
+    }
+
+    :global(.ms-Button--default) {
+      border: 1px solid $neutral-border;
+      background-color: $white;
+      color: $text-primary;
+
+      &:hover {
+        background-color: $neutral-light;
+      }
+    }
+
+    :global(.ms-Button--primary) {
+      background-color: $innovater-blue;
+      border-color: $innovater-blue;
+
+      &:hover {
+        background-color: $innovater-blue-dark;
+        border-color: $innovater-blue-dark;
+      }
+    }
+  }
+
+  // General error message
+  .errorBanner {
+    background-color: $error-bg;
+    border: 1px solid lighten($error-border, 30%);
+    border-left: 4px solid $error-border;
+    color: $error-text;
+    padding: 12px 16px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+
+  // Status badge (for table)
+  .statusBadge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+
+    &.draft {
+      background-color: #f0f0f0;
+      color: #666666;
+    }
+
+    &.pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    &.approved {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    &.rejected {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+  }
+
+  // Action buttons
+  .actionButtons {
+    display: flex;
+    gap: 4px;
+
+    :global(.ms-Button--icon) {
+      width: 32px;
+      height: 32px;
+
+      &:hover {
+        background-color: $neutral-light;
+      }
+    }
+  }
+
+  // Empty state
+  .emptyState {
+    text-align: center;
+    padding: 48px 24px;
+    color: $text-secondary;
+
+    .emptyIcon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      color: $neutral-border;
+    }
+
+    .emptyText {
+      font-size: 14px;
+      margin: 8px 0;
+    }
+  }
+
+  // Loading state
+  .loadingContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 48px;
+  }
+
+  // Header for registrations list
+  .registrationsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  // Holiday Balance Card
+  .balanceCard {
+    background: linear-gradient(135deg, $neutral-lighter 0%, $white 100%);
+    border: 1px solid $neutral-border;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    overflow: hidden;
+
+    .balanceCardHeader {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background-color: $innovater-blue;
+      color: $white;
+      font-weight: 600;
+      font-size: 14px;
+
+      .balanceIcon {
+        font-size: 18px;
+      }
+
+      .infoIconSmall {
+        font-size: 12px;
+        opacity: 0.8;
+        cursor: help;
+        margin-left: auto;
+      }
+    }
+
+    .balanceCardContent {
+      padding: 16px;
+    }
+
+    .balanceCardLoading,
+    .balanceCardEmpty,
+    .balanceCardError {
+      padding: 24px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: $text-secondary;
+      font-size: 13px;
+    }
+
+    .balanceCardError {
+      color: $error-text;
+      background-color: $error-bg;
+    }
+
+    .balanceSection {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid $neutral-border;
+
+      &:last-of-type {
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+      }
+
+      .balanceSectionTitle {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: $text-secondary;
+        margin-bottom: 12px;
+
+        .infoIconSmall {
+          font-size: 11px;
+          color: $text-secondary;
+          cursor: help;
+        }
+      }
+    }
+
+    .balanceRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+    }
+
+    .balanceItem {
+      display: flex;
+      flex-direction: column;
+      min-width: 80px;
+
+      .balanceLabel {
+        font-size: 11px;
+        color: $text-secondary;
+        margin-bottom: 4px;
+      }
+
+      .balanceValue {
+        font-size: 20px;
+        font-weight: 600;
+        color: $text-primary;
+
+        &.primary {
+          color: $innovater-blue;
+        }
+
+        &.pending {
+          color: $status-pending;
+        }
+
+        &.negative {
+          color: $status-rejected;
+        }
+      }
+    }
+
+    .balanceTransferInfo {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: rgba($innovater-blue, 0.08);
+      border-radius: 4px;
+      font-size: 12px;
+      color: $innovater-blue;
+
+      i {
+        font-size: 12px;
+      }
+    }
+
+    .balanceWarning {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      background-color: #fff3cd;
+      border-left: 3px solid #f5a623;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: #856404;
+
+      i {
+        font-size: 14px;
+        margin-top: 1px;
+      }
+    }
+
+    .balanceInfo {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      background-color: $info-bg;
+      border-left: 3px solid $info-border;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: $text-primary;
+
+      i {
+        font-size: 14px;
+        color: $info-border;
+        margin-top: 1px;
+      }
+    }
+
+    .balanceSuccess {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-top: 12px;
+      padding: 10px 12px;
+      background-color: #d4edda;
+      border-left: 3px solid $status-approved;
+      border-radius: 0 4px 4px 0;
+      font-size: 12px;
+      color: #155724;
+
+      i {
+        font-size: 14px;
+        margin-top: 1px;
+      }
+    }
+  }
+
+  .infoIconSmall {
+    font-size: 12px;
+    color: $text-secondary;
+    cursor: help;
+  }
+}
+
+// Modal container for accrual history form
+.modalContainer {
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+// Date picker styling
+:global {
+  .ms-DatePicker .ms-TextField-fieldGroup {
+    border: 1px solid $neutral-border;
+    border-radius: 4px;
+
+    &:hover {
+      border-color: darken($neutral-border, 10%);
+    }
+  }
+
+  // Remove default Pivot underline indicator on selected tab
+  .ms-Pivot-link::before,
+  .ms-Pivot-link::after,
+  .ms-Pivot-link.is-selected::before,
+  .ms-Pivot-link.is-selected::after,
+  .ms-Pivot-link[aria-selected="true"]::before,
+  .ms-Pivot-link[aria-selected="true"]::after {
+    display: none !important;
+    background-color: transparent !important;
+    height: 0 !important;
+    border: none !important;
+  }
+
+  // Also target the underline indicator element directly
+  .ms-Pivot-linkContent::before,
+  .ms-Pivot-linkContent::after {
+    display: none !important;
+  }
+
+  // Remove focus outline that may appear as a grey line
+  .ms-Pivot-link:focus {
+    outline: none !important;
+  }
+
+  .ms-Pivot-link:focus::after,
+  .ms-Pivot-link:focus::before {
+    display: none !important;
+  }
+
+  // Ensure consistent tab positioning
+  .ms-Pivot-link {
+    position: relative !important;
+    top: 0 !important;
+    transform: none !important;
+  }
+
+  // DetailsList styling
+  .ms-DetailsList {
+    .ms-DetailsHeader {
+      background-color: $neutral-light;
+      padding-top: 0;
+
+      .ms-DetailsHeader-cell {
+        font-weight: 600;
+        font-size: 12px;
+        color: $text-primary;
+        text-transform: uppercase;
+      }
+    }
+
+    .ms-DetailsRow {
+      border-bottom: 1px solid $neutral-border;
+
+      &:hover {
+        background-color: $neutral-lighter;
+      }
+    }
+  }
+}

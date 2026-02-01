@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Absence Registration - Technical Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --innovater-blue: #004e6b;
+            --innovater-blue-dark: #003a50;
+            --innovater-blue-light: #0073a0;
+            --header-bg: #1a2a33;
+            --text-primary: #333333;
+            --text-secondary: #666666;
+            --text-light: #999999;
+            --bg-light: #f8f9fa;
+            --bg-code: #1e1e1e;
+            --border-color: #e0e0e0;
+            --status-draft: #f5a623;
+            --status-approved: #4caf50;
+            --status-rejected: #e74c3c;
+            --status-pending: #2196f3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.7;
+            color: var(--text-primary);
+            background: var(--bg-light);
+        }
+
+        /* Navigation */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100vh;
+            background: var(--header-bg);
+            padding: 30px 0;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 25px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-logo {
+            font-size: 20px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar-logo::before {
+            content: none;
+        }
+
+        .sidebar-logo .logo-text {
+            color: #7a9e9e;
+        }
+
+        .sidebar-logo::after {
+            content: '.';
+            color: #d4a03a;
+            font-weight: 700;
+        }
+
+        .sidebar-subtitle {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .nav-section {
+            padding: 0 15px;
+            margin-bottom: 25px;
+        }
+
+        .nav-section-title {
+            color: rgba(255,255,255,0.4);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0 10px;
+            margin-bottom: 10px;
+        }
+
+        .nav-link {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-link.active {
+            background: var(--innovater-blue);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            min-height: 100vh;
+            height: 100vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--innovater-blue-dark) 0%, var(--innovater-blue) 50%, var(--innovater-blue-light) 100%);
+            color: white;
+            padding: 80px 60px;
+        }
+
+        .hero-brand {
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            display: inline-flex;
+            align-items: center;
+            color: #a8c8c8;
+        }
+
+        .hero-brand::before {
+            content: none;
+        }
+
+        .hero-brand::after {
+            content: '.';
+            color: #d4a03a;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            max-width: 600px;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 12px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 60px;
+            max-width: 1000px;
+        }
+
+        section {
+            margin-bottom: 60px;
+        }
+
+        h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--header-bg);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--innovater-blue);
+            letter-spacing: -0.5px;
+        }
+
+        h3 {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 35px 0 15px;
+        }
+
+        h4 {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--innovater-blue-dark);
+            margin: 25px 0 12px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--innovater-blue), var(--innovater-blue-light));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .card h4 {
+            margin: 0 0 10px;
+            color: var(--text-primary);
+        }
+
+        .card p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Code blocks */
+        pre {
+            background: var(--bg-code);
+            border-radius: 10px;
+            padding: 25px;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        pre code {
+            color: #e0e0e0;
+        }
+
+        :not(pre) > code {
+            background: #e8f5e9;
+            color: var(--innovater-blue-dark);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        /* Syntax highlighting */
+        .code-comment { color: #6a9955; }
+        .code-keyword { color: #569cd6; }
+        .code-string { color: #ce9178; }
+        .code-type { color: #4ec9b0; }
+        .code-function { color: #dcdcaa; }
+        .code-number { color: #b5cea8; }
+        .code-folder { color: #dcdc8b; }
+        .code-file { color: #9cdcfe; }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: var(--header-bg);
+            color: white;
+            font-weight: 600;
+            text-align: left;
+            padding: 15px 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: var(--bg-light);
+        }
+
+        /* Status badges */
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-draft { background: #fff3e0; color: #e65100; }
+        .status-pending { background: #e3f2fd; color: #1565c0; }
+        .status-approved { background: #e8f5e9; color: #2e7d32; }
+        .status-rejected { background: #ffebee; color: #c62828; }
+
+        /* Lists */
+        ul, ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        /* Workflow diagram */
+        .workflow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 12px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        .workflow-step {
+            text-align: center;
+            padding: 20px 30px;
+            border-radius: 10px;
+            min-width: 150px;
+        }
+
+        .workflow-step.draft { background: #fff3e0; border: 2px solid var(--status-draft); }
+        .workflow-step.pending { background: #e3f2fd; border: 2px solid var(--status-pending); }
+        .workflow-step.approved { background: #e8f5e9; border: 2px solid var(--status-approved); }
+        .workflow-step.rejected { background: #ffebee; border: 2px solid var(--status-rejected); }
+
+        .workflow-step-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .workflow-step-subtitle {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .workflow-arrow {
+            font-size: 24px;
+            color: var(--text-light);
+        }
+
+        /* Info boxes */
+        .info-box {
+            padding: 20px 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid;
+        }
+
+        .info-box.note {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .info-box.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .info-box.success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* File tree */
+        .file-tree {
+            background: var(--bg-code);
+            border-radius: 10px;
+            padding: 25px;
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+
+        .file-tree .folder { color: #dcdc8b; }
+        .file-tree .file { color: #9cdcfe; }
+        .file-tree .comment { color: #6a9955; font-style: italic; }
+
+        /* Footer */
+        .footer {
+            background: var(--header-bg);
+            color: rgba(255,255,255,0.6);
+            padding: 40px 60px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-brand {
+            font-size: 18px;
+            font-weight: 400;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-family: Arial, sans-serif;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .footer-brand::before {
+            content: none;
+        }
+
+        .footer-brand .brand-text {
+            color: #7a9e9e;
+        }
+
+        .footer-brand::after {
+            content: '.';
+            color: #d4a03a;
+            font-weight: 700;
+        }
+
+        /* Print styles */
+        @media print {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .hero {
+                background: var(--innovater-blue) !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+            .main-content {
+                margin-left: 240px;
+            }
+            .hero, .content, .footer {
+                padding-left: 40px;
+                padding-right: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .hero h1 {
+                font-size: 36px;
+            }
+            .hero, .content, .footer {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo"><span class="logo-text">Innovater</span></div>
+            <div class="sidebar-subtitle">Absence Registration Docs</div>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Getting Started</div>
+            <a href="#overview" class="nav-link active">Overview</a>
+            <a href="#technologies" class="nav-link">Technologies</a>
+            <a href="#structure" class="nav-link">Project Structure</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Architecture</div>
+            <a href="#components" class="nav-link">Components</a>
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#data-flow" class="nav-link">Data Flow</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Features</div>
+            <a href="#holiday-balance" class="nav-link">Holiday Balance</a>
+            <a href="#admin-features" class="nav-link">Admin Features</a>
+            <a href="#export" class="nav-link">Excel Export</a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Reference</div>
+            <a href="#absence-types" class="nav-link">Absence Types</a>
+            <a href="#configuration" class="nav-link">Configuration</a>
+            <a href="#styling" class="nav-link">Styling Guide</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <header class="hero">
+            <div class="hero-brand">Innovater</div>
+            <h1>Frav&aelig;rsregistrering</h1>
+            <p class="hero-subtitle">
+                Absence Registration &mdash; A SharePoint Framework web part for employee vacation and absence registration,
+                built for Danish businesses with full holiday awareness and approval workflows.
+            </p>
+            <div class="hero-badges">
+                <span class="badge">&#x1F4E6; SPFx 1.18.0</span>
+                <span class="badge">&#x269B;&#xFE0F; React 17</span>
+                <span class="badge">&#x1F4DD; TypeScript</span>
+                <span class="badge">&#x1F1E9;&#x1F1F0; Danish Localization</span>
+                <span class="badge">&#x2601;&#xFE0F; Dataverse</span>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- Overview Section -->
+            <section id="overview">
+                <h2>Overview</h2>
+                <p>
+                    The Absence Registration web part enables employees to register various types of leave,
+                    including vacation, sick days, parental leave, and more. It integrates with Microsoft Graph
+                    for user and manager information, and stores data in Dataverse (Power Platform).
+                </p>
+
+                <h3>Key Features</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">&#x1F4C5;</div>
+                        <h4>Smart Date Calculation</h4>
+                        <p>Automatically calculates working days, excluding weekends and Danish public holidays.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F465;</div>
+                        <h4>Manager Integration</h4>
+                        <p>Fetches manager information from Azure AD for automatic approver assignment.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x2705;</div>
+                        <h4>Approval Workflow</h4>
+                        <p>Complete workflow from draft to approval with status tracking.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F1E9;&#x1F1F0;</div>
+                        <h4>Danish Localization</h4>
+                        <p>Full Danish language support with proper date formatting and holiday calculations.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F4CA;</div>
+                        <h4>Holiday Balance Tracking</h4>
+                        <p>Real-time calculation of accrued, used, and available vacation days per employee.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F4BE;</div>
+                        <h4>Excel Export</h4>
+                        <p>Download personal holiday data to CSV for offline viewing and record-keeping.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F4C8;</div>
+                        <h4>Admin Report</h4>
+                        <p>Visual overview of all employees' holiday balances with aggregated statistics.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F527;</div>
+                        <h4>Accrual Management</h4>
+                        <p>Admin tools to manage holiday accruals, initial balances, and manual adjustments.</p>
+                    </div>
+                </div>
+
+                <h3>Registration Workflow</h3>
+                <div class="workflow">
+                    <div class="workflow-step draft">
+                        <div class="workflow-step-title">Kladde</div>
+                        <div class="workflow-step-subtitle">Draft</div>
+                    </div>
+                    <div class="workflow-arrow">&#x2192;</div>
+                    <div class="workflow-step pending">
+                        <div class="workflow-step-title">Afventer</div>
+                        <div class="workflow-step-subtitle">Pending Approval</div>
+                    </div>
+                    <div class="workflow-arrow">&#x2192;</div>
+                    <div class="workflow-step approved">
+                        <div class="workflow-step-title">Godkendt</div>
+                        <div class="workflow-step-subtitle">Approved</div>
+                    </div>
+                </div>
+                <div class="workflow">
+                    <div class="workflow-step pending">
+                        <div class="workflow-step-title">Afventer</div>
+                        <div class="workflow-step-subtitle">Pending Approval</div>
+                    </div>
+                    <div class="workflow-arrow">&#x2192;</div>
+                    <div class="workflow-step rejected">
+                        <div class="workflow-step-title">Afvist</div>
+                        <div class="workflow-step-subtitle">Rejected</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technologies Section -->
+            <section id="technologies">
+                <h2>Technologies</h2>
+
+                <h3>Core Stack</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Technology</th>
+                                <th>Version</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SharePoint Framework</strong></td>
+                                <td>1.18.0</td>
+                                <td>Web part hosting platform</td>
+                            </tr>
+                            <tr>
+                                <td><strong>React</strong></td>
+                                <td>17.0.1</td>
+                                <td>UI component library</td>
+                            </tr>
+                            <tr>
+                                <td><strong>TypeScript</strong></td>
+                                <td>4.5.5</td>
+                                <td>Type-safe JavaScript</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FluentUI React</strong></td>
+                                <td>8.110.0</td>
+                                <td>Microsoft UI components</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PnPjs</strong></td>
+                                <td>3.18.0</td>
+                                <td>SharePoint &amp; Graph abstractions</td>
+                            </tr>
+                            <tr>
+                                <td><strong>date-fns</strong></td>
+                                <td>2.30.0</td>
+                                <td>Date manipulation utilities</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Required Permissions</h3>
+                <div class="info-box note">
+                    <div class="info-box-title">&#x1F512; Microsoft Graph Permissions</div>
+                    <p>The web part requires the following API permissions to be approved in SharePoint Admin Center:</p>
+                    <ul>
+                        <li><code>User.Read</code> - Read current user profile</li>
+                        <li><code>User.Read.All</code> - Search users and read manager information</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Project Structure Section -->
+            <section id="structure">
+                <h2>Project Structure</h2>
+
+                <div class="file-tree">
+<span class="folder">absence-registration/</span>
+├── <span class="folder">src/</span>
+│   └── <span class="folder">webparts/absenceRegistration/</span>
+│       ├── <span class="folder">components/</span>
+│       │   ├── <span class="file">AbsenceRegistration.tsx</span>      <span class="comment"># Main container</span>
+│       │   ├── <span class="file">AbsenceForm.tsx</span>              <span class="comment"># Registration form</span>
+│       │   ├── <span class="file">MyRegistrations.tsx</span>          <span class="comment"># List view + balance</span>
+│       │   ├── <span class="file">PendingApprovals.tsx</span>         <span class="comment"># Approver view</span>
+│       │   ├── <span class="file">AdminPanel.tsx</span>               <span class="comment"># Admin tools</span>
+│       │   ├── <span class="file">AdminReport.tsx</span>              <span class="comment"># Visual report</span>
+│       │   ├── <span class="file">HolidayBalanceCard.tsx</span>       <span class="comment"># Balance display</span>
+│       │   ├── <span class="file">AbsenceRegistration.module.scss</span>
+│       │   └── <span class="file">IAbsenceRegistrationProps.ts</span>
+│       ├── <span class="folder">services/</span>
+│       │   ├── <span class="file">DataverseService.ts</span>          <span class="comment"># Dataverse CRUD</span>
+│       │   ├── <span class="file">GraphService.ts</span>              <span class="comment"># MS Graph API</span>
+│       │   ├── <span class="file">ExcelExportService.ts</span>        <span class="comment"># CSV export</span>
+│       │   └── <span class="file">DanishHolidayService.ts</span>      <span class="comment"># Holiday calc</span>
+│       ├── <span class="folder">models/</span>
+│       │   ├── <span class="file">IAbsenceRegistration.ts</span>      <span class="comment"># Absence interfaces</span>
+│       │   └── <span class="file">IHolidayBalance.ts</span>           <span class="comment"># Balance interfaces</span>
+│       ├── <span class="folder">loc/</span>
+│       │   ├── <span class="file">en-us.js</span>
+│       │   └── <span class="file">da-dk.js</span>
+│       ├── <span class="file">AbsenceRegistrationWebPart.ts</span>
+│       └── <span class="file">AbsenceRegistrationWebPart.manifest.json</span>
+├── <span class="folder">config/</span>
+│   ├── <span class="file">package-solution.json</span>
+│   └── <span class="file">serve.json</span>
+├── <span class="file">package.json</span>
+├── <span class="file">tsconfig.json</span>
+└── <span class="file">gulpfile.js</span>
+                </div>
+            </section>
+
+            <!-- Components Section -->
+            <section id="components">
+                <h2>Components</h2>
+
+                <h3>AbsenceRegistration.tsx</h3>
+                <p>The main container component that orchestrates the entire web part.</p>
+
+                <h4>Responsibilities</h4>
+                <ul>
+                    <li>Tab navigation between "NY REGISTRERING" and "MINE REGISTRERINGER"</li>
+                    <li>Loading user information and existing registrations on mount</li>
+                    <li>Managing global state (user, registrations, loading, errors)</li>
+                    <li>Rendering the header bar with action buttons</li>
+                </ul>
+
+                <h4>State Management</h4>
+                <pre><code><span class="code-keyword">const</span> [activeTab, setActiveTab] = <span class="code-function">useState</span>&lt;<span class="code-type">string</span>&gt;(<span class="code-string">'new'</span>);
+<span class="code-keyword">const</span> [currentUser, setCurrentUser] = <span class="code-function">useState</span>&lt;<span class="code-type">IUserInfo</span> | <span class="code-keyword">null</span>&gt;(<span class="code-keyword">null</span>);
+<span class="code-keyword">const</span> [registrations, setRegistrations] = <span class="code-function">useState</span>&lt;<span class="code-type">IAbsenceRegistration</span>[]&gt;([]);
+<span class="code-keyword">const</span> [isLoading, setIsLoading] = <span class="code-function">useState</span>&lt;<span class="code-type">boolean</span>&gt;(<span class="code-keyword">true</span>);
+<span class="code-keyword">const</span> [error, setError] = <span class="code-function">useState</span>&lt;<span class="code-type">string</span> | <span class="code-keyword">null</span>&gt;(<span class="code-keyword">null</span>);</code></pre>
+
+                <h3>AbsenceForm.tsx</h3>
+                <p>The form component for creating and editing absence registrations.</p>
+
+                <h4>Form Fields</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Component</th>
+                                <th>Validation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Employee</td>
+                                <td>Display only (with avatar)</td>
+                                <td>Auto-populated</td>
+                            </tr>
+                            <tr>
+                                <td>Approver</td>
+                                <td>ComboBox with search</td>
+                                <td>Required if no manager</td>
+                            </tr>
+                            <tr>
+                                <td>Start Date</td>
+                                <td>DatePicker (Danish)</td>
+                                <td>Required</td>
+                            </tr>
+                            <tr>
+                                <td>End Date</td>
+                                <td>DatePicker (Danish)</td>
+                                <td>Required, &gt;= Start Date</td>
+                            </tr>
+                            <tr>
+                                <td>Number of Days</td>
+                                <td>TextField (auto-calc)</td>
+                                <td>&gt;= 1 working day</td>
+                            </tr>
+                            <tr>
+                                <td>Absence Type</td>
+                                <td>ChoiceGroup</td>
+                                <td>Required</td>
+                            </tr>
+                            <tr>
+                                <td>Notes</td>
+                                <td>TextField (multiline)</td>
+                                <td>Optional</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>MyRegistrations.tsx</h3>
+                <p>Displays the user's absence registrations in a table format with action buttons.</p>
+
+                <h4>Available Actions by Status</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Available Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="status status-draft">Kladde</span></td>
+                                <td>Edit, Submit for Approval, Delete</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status status-pending">Afventer</span></td>
+                                <td>View only (clock icon)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status status-approved">Godkendt</span></td>
+                                <td>View only (checkmark)</td>
+                            </tr>
+                            <tr>
+                                <td><span class="status status-rejected">Afvist</span></td>
+                                <td>Edit, Delete</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services">
+                <h2>Services</h2>
+
+                <h3>DataverseService.ts</h3>
+                <p>Primary data persistence layer using Dataverse (Power Platform).</p>
+
+                <div class="info-box success">
+                    <div class="info-box-title">&#x1F4BE; Data Storage</div>
+                    <p>
+                        <strong>Table:</strong> <code>cr153_absenceregistrations</code><br>
+                        <strong>Publisher Prefix:</strong> <code>cr153_</code><br>
+                        <strong>API Version:</strong> Dataverse Web API v9.2
+                    </p>
+                </div>
+
+                <h4>Key Methods</h4>
+                <pre><code><span class="code-comment">// Create a new registration</span>
+<span class="code-keyword">async</span> <span class="code-function">createRegistration</span>(data: <span class="code-type">IAbsenceRegistration</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">string</span>&gt;
+
+<span class="code-comment">// Update existing registration</span>
+<span class="code-keyword">async</span> <span class="code-function">updateRegistration</span>(id: <span class="code-type">string</span>, updates: <span class="code-type">Partial</span>&lt;<span class="code-type">IAbsenceRegistration</span>&gt;): <span class="code-type">Promise</span>&lt;<span class="code-type">void</span>&gt;
+
+<span class="code-comment">// Delete registration</span>
+<span class="code-keyword">async</span> <span class="code-function">deleteRegistration</span>(id: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">void</span>&gt;
+
+<span class="code-comment">// Get user's registrations</span>
+<span class="code-keyword">async</span> <span class="code-function">getMyRegistrations</span>(userEmail: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">IAbsenceRegistration</span>[]&gt;
+
+<span class="code-comment">// Submit draft for approval</span>
+<span class="code-keyword">async</span> <span class="code-function">submitForApproval</span>(id: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">void</span>&gt;
+
+<span class="code-comment">// Get accrual history for a user</span>
+<span class="code-keyword">async</span> <span class="code-function">getAccrualHistoryForUser</span>(email: <span class="code-type">string</span>, year: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">IAccrualHistory</span>[]&gt;
+
+<span class="code-comment">// Calculate holiday balance for a user</span>
+<span class="code-keyword">async</span> <span class="code-function">calculateHolidayBalanceForUser</span>(email: <span class="code-type">string</span>, year?: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">ICalculatedHolidayBalance</span>&gt;
+
+<span class="code-comment">// Get all employee balances (admin)</span>
+<span class="code-keyword">async</span> <span class="code-function">getAllEmployeeBalances</span>(year: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">ICalculatedHolidayBalance</span>[]&gt;
+
+<span class="code-comment">// Create accrual history record (admin)</span>
+<span class="code-keyword">async</span> <span class="code-function">createAccrualHistory</span>(accrual: <span class="code-type">IAccrualHistory</span>): <span class="code-type">Promise</span>&lt;{ id: <span class="code-type">string</span> }&gt;</code></pre>
+
+                <h3>GraphService.ts</h3>
+                <p>Microsoft Graph integration for user profiles and organizational hierarchy.</p>
+
+                <h4>Key Methods</h4>
+                <pre><code><span class="code-comment">// Get current user profile</span>
+<span class="code-keyword">async</span> <span class="code-function">getCurrentUser</span>(): <span class="code-type">Promise</span>&lt;<span class="code-type">IUserInfo</span>&gt;
+
+<span class="code-comment">// Get user's manager from org chart</span>
+<span class="code-keyword">async</span> <span class="code-function">getCurrentUserManager</span>(): <span class="code-type">Promise</span>&lt;<span class="code-type">IUserInfo</span> | <span class="code-keyword">null</span>&gt;
+
+<span class="code-comment">// Search users for approver selection</span>
+<span class="code-keyword">async</span> <span class="code-function">searchUsers</span>(searchText: <span class="code-type">string</span>): <span class="code-type">Promise</span>&lt;<span class="code-type">IUserInfo</span>[]&gt;
+
+<span class="code-comment">// Get combined user + manager info</span>
+<span class="code-keyword">async</span> <span class="code-function">getFullUserInfo</span>(): <span class="code-type">Promise</span>&lt;{ user: <span class="code-type">IUserInfo</span>, manager: <span class="code-type">IUserInfo</span> | <span class="code-keyword">null</span> }&gt;</code></pre>
+
+                <h3>DanishHolidayService.ts</h3>
+                <p>Utility service for calculating working days with Danish holiday awareness.</p>
+
+                <h4>Supported Holidays</h4>
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Fixed Holidays</h4>
+                        <ul>
+                            <li>Nyt&aring;rsdag (Jan 1)</li>
+                            <li>Juleaftensdag (Dec 24)</li>
+                            <li>Juledag (Dec 25)</li>
+                            <li>2. Juledag (Dec 26)</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Easter-Based Holidays</h4>
+                        <ul>
+                            <li>Sk&aelig;rtorsdag</li>
+                            <li>Langfredag</li>
+                            <li>P&aring;skedag &amp; 2. P&aring;skedag</li>
+                            <li>Kristi Himmelfartsdag</li>
+                            <li>Pinsedag &amp; 2. Pinsedag</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">&#x26A0;&#xFE0F; Note: Store Bededag</div>
+                    <p>Store Bededag (Great Prayer Day) was abolished as a public holiday starting from 2024 and is no longer included in calculations.</p>
+                </div>
+            </section>
+
+            <!-- Data Flow Section -->
+            <section id="data-flow">
+                <h2>Data Flow</h2>
+
+                <h3>Initialization Sequence</h3>
+                <pre><code><span class="code-comment">// 1. Web part loads</span>
+AbsenceRegistrationWebPart.<span class="code-function">render</span>()
+
+<span class="code-comment">// 2. React component mounts</span>
+AbsenceRegistration.<span class="code-function">useEffect</span>(() => {
+  <span class="code-comment">// 3. Fetch user info from Graph</span>
+  GraphService.<span class="code-function">getFullUserInfo</span>()
+
+  <span class="code-comment">// 4. Load existing registrations</span>
+  DataverseService.<span class="code-function">getMyRegistrations</span>(userEmail)
+})</code></pre>
+
+                <h3>Create Registration Flow</h3>
+                <pre><code><span class="code-comment">// 1. User fills form and clicks save</span>
+AbsenceForm.<span class="code-function">handleSubmit</span>()
+
+<span class="code-comment">// 2. Calculate working days</span>
+DanishHolidayService.<span class="code-function">calculateWorkingDays</span>(startDate, endDate)
+
+<span class="code-comment">// 3. Validate form data</span>
+<span class="code-function">validateForm</span>(formData)
+
+<span class="code-comment">// 4. Save to Dataverse</span>
+DataverseService.<span class="code-function">createRegistration</span>(registration)
+
+<span class="code-comment">// 5. Refresh list</span>
+<span class="code-function">onSave</span>() <span class="code-comment">// Callback to parent</span></code></pre>
+            </section>
+
+            <!-- Holiday Balance Section -->
+            <section id="holiday-balance">
+                <h2>Holiday Balance Management</h2>
+                <p>
+                    The system tracks holiday balances according to the Danish Holiday Act (Ferieloven),
+                    which operates on a holiday year running from September 1 to August 31.
+                </p>
+
+                <h3>Holiday Balance Card</h3>
+                <p>
+                    Each user sees their personal holiday balance in the "Mine Registreringer" tab.
+                    The balance card displays both statutory vacation days (Feriedage) and
+                    contractual extra days (Feriefridage).
+                </p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Feriedage (Statutory)</h4>
+                        <p>25 days per year as mandated by Danish law. Displayed with:</p>
+                        <ul>
+                            <li><strong>Til r&aring;dighed:</strong> Available days</li>
+                            <li><strong>Optjent:</strong> Accrued days</li>
+                            <li><strong>Brugt:</strong> Used days</li>
+                            <li><strong>Afventer:</strong> Pending approval</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>Feriefridage (Contractual)</h4>
+                        <p>Typically 5 days per year based on employment contract:</p>
+                        <ul>
+                            <li>Same structure as Feriedage</li>
+                            <li>Tracked separately</li>
+                            <li>Displayed alongside statutory days</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>Accrual History</h3>
+                <p>
+                    The system maintains a complete history of how holiday balance has changed over time.
+                    Each accrual record includes the type, date, and number of days added or adjusted.
+                </p>
+
+                <h4>Accrual Types</h4>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type (Danish)</th>
+                                <th>Type (English)</th>
+                                <th>Option Set Value</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Startsaldo</strong></td>
+                                <td>Initial Balance</td>
+                                <td>100000003</td>
+                                <td>Opening balance for new employees</td>
+                            </tr>
+                            <tr>
+                                <td><strong>&Aring;rsstart overf&oslash;rsel</strong></td>
+                                <td>Year Start Carryover</td>
+                                <td>100000001</td>
+                                <td>Days transferred from previous year</td>
+                            </tr>
+                            <tr>
+                                <td><strong>M&aring;nedlig optjening</strong></td>
+                                <td>Monthly Accrual</td>
+                                <td>100000000</td>
+                                <td>Regular monthly accrual (2.08 days/month)</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Manuel justering</strong></td>
+                                <td>Manual Adjustment</td>
+                                <td>100000002</td>
+                                <td>Admin corrections and adjustments</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Balance Calculation</h3>
+                <p>The holiday balance is calculated in real-time by aggregating:</p>
+                <pre><code><span class="code-comment">// Available = Accrued - Used - Pending</span>
+<span class="code-keyword">const</span> availableDays = totalAccruedDays - usedDays - pendingDays;
+<span class="code-keyword">const</span> availableFeriefridage = totalAccruedFeriefridage - usedFeriefridage - pendingFeriefridage;</code></pre>
+
+                <div class="info-box note">
+                    <div class="info-box-title">&#x1F4C5; Holiday Year</div>
+                    <p>
+                        The Danish holiday year runs from <strong>September 1</strong> to <strong>August 31</strong>.
+                        For example, holiday year "2024-2025" covers September 1, 2024 to August 31, 2025.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Admin Features Section -->
+            <section id="admin-features">
+                <h2>Admin Features</h2>
+                <p>
+                    Administrators have access to additional management tools through the "Administration" tab.
+                    Admin access is controlled by a list of email addresses in the configuration.
+                </p>
+
+                <h3>Admin Panel</h3>
+                <p>The admin panel provides tools for managing both absence registrations and accrual history:</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-icon">&#x1F5D1;</div>
+                        <h4>Registration Management</h4>
+                        <p>View all registrations across employees. Delete individual records or clear all data.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x2795;</div>
+                        <h4>Accrual Management</h4>
+                        <p>Add new accrual entries for employees - initial balances, carryovers, or manual adjustments.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">&#x1F4CA;</div>
+                        <h4>Visual Report</h4>
+                        <p>Open the Ferieoversigt report to see aggregated statistics and employee balance overview.</p>
+                    </div>
+                </div>
+
+                <h3>Ferieoversigt (Holiday Overview Report)</h3>
+                <p>
+                    The admin report provides a comprehensive visual overview of all employees' holiday balances
+                    for the current holiday year.
+                </p>
+
+                <h4>Report Components</h4>
+                <ul>
+                    <li><strong>Summary Cards:</strong> Total employees, aggregated feriedage/feriefridage, usage percentages</li>
+                    <li><strong>Visual Balance Bars:</strong> Color-coded bars showing used (blue/green), pending (yellow), and available (gray)</li>
+                    <li><strong>Employee Table:</strong> Detailed breakdown per employee with sortable columns</li>
+                    <li><strong>Legend:</strong> Explanation of the color coding</li>
+                </ul>
+
+                <div class="info-box warning">
+                    <div class="info-box-title">&#x26A0;&#xFE0F; Admin Access</div>
+                    <p>
+                        Admin functionality is restricted to users whose email addresses are listed in the
+                        <code>ADMIN_EMAILS</code> array in AbsenceRegistration.tsx. Only admins see the
+                        "Administration" tab.
+                    </p>
+                </div>
+
+                <h3>Adding Accrual History</h3>
+                <p>The admin form for adding accrual entries includes:</p>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Description</th>
+                                <th>Required</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Medarbejder</strong></td>
+                                <td>Search and select employee from Azure AD</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Optjeningstype</strong></td>
+                                <td>Type of accrual (Startsaldo, Carryover, etc.)</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ferie&aring;r</strong></td>
+                                <td>Holiday year the accrual applies to</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Optjeningsdato</strong></td>
+                                <td>Date of the accrual entry</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feriedage</strong></td>
+                                <td>Number of statutory vacation days to add</td>
+                                <td>One required</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Feriefridage</strong></td>
+                                <td>Number of contractual extra days to add</td>
+                                <td>One required</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Noter</strong></td>
+                                <td>Optional notes for the accrual entry</td>
+                                <td>No</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Export Section -->
+            <section id="export">
+                <h2>Excel Export</h2>
+                <p>
+                    Users can download their personal holiday data to a CSV file for offline viewing,
+                    record-keeping, or import into Excel or other spreadsheet applications.
+                </p>
+
+                <h3>Export Contents</h3>
+                <p>The exported file includes three sections:</p>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>1. Feriesaldo (Balance)</h4>
+                        <ul>
+                            <li>Employee name and holiday year</li>
+                            <li>Accrued, used, pending, available days</li>
+                            <li>Both Feriedage and Feriefridage</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>2. Frav&aelig;rsregistreringer</h4>
+                        <ul>
+                            <li>All absence registrations</li>
+                            <li>Type, dates, number of days</li>
+                            <li>Status and approver info</li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h4>3. Optjeningshistorik</h4>
+                        <ul>
+                            <li>All accrual entries</li>
+                            <li>Type, date, days accrued</li>
+                            <li>Notes and comments</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3>File Format</h3>
+                <p>The export uses CSV format with Danish-compatible settings:</p>
+                <ul>
+                    <li><strong>Encoding:</strong> UTF-8 with BOM (for proper character display)</li>
+                    <li><strong>Delimiter:</strong> Semicolon (;) - standard for Danish Excel</li>
+                    <li><strong>Decimal:</strong> Comma (,) - Danish number format</li>
+                    <li><strong>Date format:</strong> DD-MM-YYYY</li>
+                </ul>
+
+                <h3>How to Export</h3>
+                <p>
+                    Click the Excel icon (&#x1F4CA;) in the Feriesaldo card header on the "Mine Registreringer" tab.
+                    The file will be downloaded automatically with a filename like:
+                </p>
+                <pre><code>Feriedata_John_Doe_01-02-2026.csv</code></pre>
+
+                <div class="info-box success">
+                    <div class="info-box-title">&#x2705; Excel Compatibility</div>
+                    <p>
+                        The CSV format ensures maximum compatibility. Simply double-click the downloaded file
+                        to open in Excel with proper formatting. For best results, ensure Excel is set to
+                        Danish regional settings.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Absence Types Section -->
+            <section id="absence-types">
+                <h2>Absence Types</h2>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type (Danish)</th>
+                                <th>Type (English)</th>
+                                <th>Option Set Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Ferie</strong></td>
+                                <td>Vacation</td>
+                                <td>100000000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Sygdom</strong></td>
+                                <td>Sick Leave</td>
+                                <td>100000001</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Barselsorlov</strong></td>
+                                <td>Parental Leave</td>
+                                <td>100000002</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Barns sygedag</strong></td>
+                                <td>Child's Sick Day</td>
+                                <td>100000003</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Omsorgsdage</strong></td>
+                                <td>Care Days</td>
+                                <td>100000004</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Andet</strong></td>
+                                <td>Other</td>
+                                <td>100000005</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Configuration Section -->
+            <section id="configuration">
+                <h2>Configuration</h2>
+
+                <h3>Web Part Properties</h3>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Type</th>
+                                <th>Default</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>title</code></td>
+                                <td>string</td>
+                                <td>"Frav&aelig;rsregistrering"</td>
+                                <td>Display title in header</td>
+                            </tr>
+                            <tr>
+                                <td><code>dataverseUrl</code></td>
+                                <td>string</td>
+                                <td>orgab6f6874.crm4.dynamics.com</td>
+                                <td>Dataverse environment URL</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Environment URLs</h3>
+                <pre><code><span class="code-comment">// SharePoint Tenant</span>
+https://innovaterdk.sharepoint.com
+
+<span class="code-comment">// Development Site</span>
+https://innovaterdk.sharepoint.com/sites/projektstyring
+
+<span class="code-comment">// Dataverse Environment</span>
+https://orgab6f6874.crm4.dynamics.com
+
+<span class="code-comment">// Local Development Server</span>
+https://localhost:4321</code></pre>
+
+                <h3>Build Commands</h3>
+                <pre><code><span class="code-comment"># Install dependencies</span>
+npm install
+
+<span class="code-comment"># Start development server</span>
+gulp serve
+
+<span class="code-comment"># Build for production</span>
+gulp bundle --ship
+gulp package-solution --ship
+
+<span class="code-comment"># Clean build artifacts</span>
+gulp clean</code></pre>
+            </section>
+
+            <!-- Styling Section -->
+            <section id="styling">
+                <h2>Styling Guide</h2>
+
+                <h3>Brand Colors</h3>
+                <div class="card-grid">
+                    <div class="card" style="border-top: 4px solid #5a6e3a;">
+                        <h4>Innovater Green</h4>
+                        <code>#5a6e3a</code>
+                        <p>Primary brand color, used for accents and selected states.</p>
+                    </div>
+                    <div class="card" style="border-top: 4px solid #4a5c2e;">
+                        <h4>Green Dark</h4>
+                        <code>#4a5c2e</code>
+                        <p>Hover states and emphasis.</p>
+                    </div>
+                    <div class="card" style="border-top: 4px solid #3a3a3a;">
+                        <h4>Header Background</h4>
+                        <code>#3a3a3a</code>
+                        <p>Dark header bar and navigation.</p>
+                    </div>
+                    <div class="card" style="border-top: 4px solid #f5a623;">
+                        <h4>Action Orange</h4>
+                        <code>#f5a623</code>
+                        <p>Save buttons and pending status.</p>
+                    </div>
+                </div>
+
+                <h3>Status Colors</h3>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin: 20px 0;">
+                    <span class="status status-draft">Kladde</span>
+                    <span class="status status-pending">Afventer</span>
+                    <span class="status status-approved">Godkendt</span>
+                    <span class="status status-rejected">Afvist</span>
+                </div>
+
+                <h3>Typography</h3>
+                <p>The application uses the system font stack with Segoe UI as the primary font for consistency with Microsoft 365.</p>
+                <pre><code><span class="code-keyword">font-family</span>: <span class="code-string">'Segoe UI'</span>, <span class="code-string">'Roboto'</span>, <span class="code-string">'Helvetica Neue'</span>, sans-serif;</code></pre>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand"><span class="brand-text">Innovater</span></div>
+                    <p>Absence Registration Web Part Documentation</p>
+                </div>
+                <div>
+                    <p>SharePoint Framework 1.18.0 &bull; React 17 &bull; TypeScript</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // Smooth scroll for navigation links - SharePoint compatible
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    // Get the main content area for scrolling
+                    const mainContent = document.querySelector('.main-content');
+                    const headerOffset = 20;
+                    const elementPosition = targetElement.offsetTop;
+
+                    // Try scrolling the main content area first (for SharePoint iframe rendering)
+                    if (mainContent) {
+                        mainContent.scrollTo({
+                            top: elementPosition - headerOffset,
+                            behavior: 'smooth'
+                        });
+                    }
+
+                    // Also try standard scrollIntoView as fallback
+                    setTimeout(() => {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 50);
+                }
+
+                // Update active state
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                return false;
+            });
+        });
+
+        // Update active nav on scroll
+        const mainContent = document.querySelector('.main-content');
+        const scrollContainer = mainContent || window;
+
+        scrollContainer.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            let current = '';
+            const scrollTop = mainContent ? mainContent.scrollTop : window.scrollY;
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (scrollTop >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Handle initial hash on page load
+        if (window.location.hash) {
+            const targetId = window.location.hash.substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                setTimeout(() => {
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

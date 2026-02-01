@@ -1,0 +1,1238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24014.198" SolutionPackageVersion="9.2" languagecode="1030" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Entities>
+    <Entity Name="cr_absenceregistration" unmodifiedName="cr_absenceregistration">
+      <EntityInfo>
+        <entity Name="cr_absenceregistration">
+          <LocalizedNames>
+            <LocalizedName description="Absence Registration" languagecode="1033" />
+            <LocalizedName description="Fraværsregistrering" languagecode="1030" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Absence Registrations" languagecode="1033" />
+            <LocalizedCollectionName description="Fraværsregistreringer" languagecode="1030" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Table for storing vacation and absence registrations" languagecode="1033" />
+            <Description description="Tabel til opbevaring af ferie- og fraværsregistreringer" languagecode="1030" />
+          </Descriptions>
+          <attributes>
+            <!-- Primary Name Field -->
+            <attribute PhysicalName="cr_name">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsLocalizable>0</IsLocalizable>
+              <displaynames>
+                <displayname description="Name" languagecode="1033" />
+                <displayname description="Navn" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="The name of the registration" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Employee Email -->
+            <attribute PhysicalName="cr_employeeemail">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <Format>Email</Format>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Email" languagecode="1033" />
+                <displayname description="Medarbejder e-mail" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Employee Name -->
+            <attribute PhysicalName="cr_employeename">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Name" languagecode="1033" />
+                <displayname description="Medarbejder" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Department -->
+            <attribute PhysicalName="cr_department">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Department" languagecode="1033" />
+                <displayname description="Afdeling" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Approver Email -->
+            <attribute PhysicalName="cr_approveremail">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <Format>Email</Format>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Approver Email" languagecode="1033" />
+                <displayname description="Godkender e-mail" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Approver Name -->
+            <attribute PhysicalName="cr_approvername">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Approver Name" languagecode="1033" />
+                <displayname description="Godkender" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Start Date -->
+            <attribute PhysicalName="cr_startdate">
+              <Type>datetime</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Start Date" languagecode="1033" />
+                <displayname description="Dato start" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- End Date -->
+            <attribute PhysicalName="cr_enddate">
+              <Type>datetime</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="End Date" languagecode="1033" />
+                <displayname description="Dato slut" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Number of Days -->
+            <attribute PhysicalName="cr_numberofdays">
+              <Type>int</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>365</MaxValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Number of Days" languagecode="1033" />
+                <displayname description="Antal dage" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Absence Type (Choice) -->
+            <attribute PhysicalName="cr_absencetype">
+              <Type>picklist</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Absence Type" languagecode="1033" />
+                <displayname description="Fraværstype" languagecode="1030" />
+              </displaynames>
+              <optionset Name="cr_absencetype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <displaynames>
+                  <displayname description="Absence Type" languagecode="1033" />
+                  <displayname description="Fraværstype" languagecode="1030" />
+                </displaynames>
+                <options>
+                  <option value="100000000">
+                    <labels>
+                      <label description="Vacation" languagecode="1033" />
+                      <label description="Ferie" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000001">
+                    <labels>
+                      <label description="Sick Leave" languagecode="1033" />
+                      <label description="Sygdom" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000002">
+                    <labels>
+                      <label description="Parental Leave" languagecode="1033" />
+                      <label description="Barselsorlov" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000003">
+                    <labels>
+                      <label description="Holiday Leave Days" languagecode="1033" />
+                      <label description="Feriefridage" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000004">
+                    <labels>
+                      <label description="Flex/Time Off in Lieu" languagecode="1033" />
+                      <label description="Flex/afspadsering" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000005">
+                    <labels>
+                      <label description="Other Absence" languagecode="1033" />
+                      <label description="Andet fravær" languagecode="1030" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+
+            <!-- Status (Choice) -->
+            <attribute PhysicalName="cr_status">
+              <Type>picklist</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <DefaultValue>100000000</DefaultValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Status" languagecode="1033" />
+                <displayname description="Status" languagecode="1030" />
+              </displaynames>
+              <optionset Name="cr_status">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <displaynames>
+                  <displayname description="Status" languagecode="1033" />
+                  <displayname description="Status" languagecode="1030" />
+                </displaynames>
+                <options>
+                  <option value="100000000">
+                    <labels>
+                      <label description="Draft" languagecode="1033" />
+                      <label description="Kladde" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000001">
+                    <labels>
+                      <label description="Pending Approval" languagecode="1033" />
+                      <label description="Afventer godkendelse" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000002">
+                    <labels>
+                      <label description="Approved" languagecode="1033" />
+                      <label description="Godkendt" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000003">
+                    <labels>
+                      <label description="Rejected" languagecode="1033" />
+                      <label description="Afvist" languagecode="1030" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+
+            <!-- Notes -->
+            <attribute PhysicalName="cr_notes">
+              <Type>ntext</Type>
+              <Length>2000</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Notes" languagecode="1033" />
+                <displayname description="Noter" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Approval Date -->
+            <attribute PhysicalName="cr_approvaldate">
+              <Type>datetime</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Approval Date" languagecode="1033" />
+                <displayname description="Godkendelsesdato" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Approver Comments -->
+            <attribute PhysicalName="cr_approvercomments">
+              <Type>ntext</Type>
+              <Length>2000</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Approver Comments" languagecode="1033" />
+                <displayname description="Godkenders kommentarer" languagecode="1030" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>cr_absenceregistrations</EntitySetName>
+          <IsBPFEntity>0</IsBPFEntity>
+          <IsCustomEntity>1</IsCustomEntity>
+          <IsActivityParty>0</IsActivityParty>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsVisibleInMobile>1</IsVisibleInMobile>
+          <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+          <IsReadOnlyInMobileClient>0</IsReadOnlyInMobileClient>
+          <HasActivities>0</HasActivities>
+          <HasNotes>0</HasNotes>
+          <HasFeedback>0</HasFeedback>
+          <IsConnectionsEnabled>0</IsConnectionsEnabled>
+          <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+          <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+          <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+          <IsSLAEnabled>0</IsSLAEnabled>
+          <IsDuplicateDetectionEnabled>0</IsDuplicateDetectionEnabled>
+          <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+          <IsMailMergeEnabled>0</IsMailMergeEnabled>
+          <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+          <CanCreateCharts>1</CanCreateCharts>
+          <CanCreateViews>1</CanCreateViews>
+          <CanCreateForms>1</CanCreateForms>
+          <CanCreateAttributes>1</CanCreateAttributes>
+          <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+          <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+          <CanBeInManyToMany>1</CanBeInManyToMany>
+          <CanBeInCustomEntityAssociation>1</CanBeInCustomEntityAssociation>
+          <CanEnableSyncToExternalSearchIndex>1</CanEnableSyncToExternalSearchIndex>
+          <SyncToExternalSearchIndex>0</SyncToExternalSearchIndex>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <CanChangeHierarchicalRelationship>1</CanChangeHierarchicalRelationship>
+          <IconSmallName xsi:nil="true" />
+          <IconMediumName xsi:nil="true" />
+          <IconLargeName xsi:nil="true" />
+          <IconVectorName xsi:nil="true" />
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <EntityColor>#0066cc</EntityColor>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- Holiday Balance Table -->
+    <Entity Name="cr_holidaybalance" unmodifiedName="cr_holidaybalance">
+      <EntityInfo>
+        <entity Name="cr_holidaybalance">
+          <LocalizedNames>
+            <LocalizedName description="Holiday Balance" languagecode="1033" />
+            <LocalizedName description="Feriesaldo" languagecode="1030" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Holiday Balances" languagecode="1033" />
+            <LocalizedCollectionName description="Feriesaldi" languagecode="1030" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Tracks employee holiday balance per holiday year according to Danish holiday law" languagecode="1033" />
+            <Description description="Sporer medarbejderes feriesaldo pr. ferieår i henhold til dansk ferielov" languagecode="1030" />
+          </Descriptions>
+          <attributes>
+            <!-- Primary Name Field -->
+            <attribute PhysicalName="cr_name">
+              <Type>nvarchar</Type>
+              <Length>200</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsLocalizable>0</IsLocalizable>
+              <displaynames>
+                <displayname description="Name" languagecode="1033" />
+                <displayname description="Navn" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Auto-generated: EmployeeName - HolidayYear" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Employee Email -->
+            <attribute PhysicalName="cr_employeeemail">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <Format>Email</Format>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Email" languagecode="1033" />
+                <displayname description="Medarbejder e-mail" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Employee Name -->
+            <attribute PhysicalName="cr_employeename">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Name" languagecode="1033" />
+                <displayname description="Medarbejder" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Holiday Year (e.g., "2024-2025" for Sept 2024 - Aug 2025) -->
+            <attribute PhysicalName="cr_holidayyear">
+              <Type>nvarchar</Type>
+              <Length>20</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Holiday Year" languagecode="1033" />
+                <displayname description="Ferieår" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Holiday year period (Sept-Aug), e.g., 2024-2025" languagecode="1033" />
+                <Description description="Ferieårsperiode (sept-aug), f.eks. 2024-2025" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Accrued Days (Total accrued this holiday year) -->
+            <attribute PhysicalName="cr_accrueddays">
+              <Type>decimal</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Accrued Days" languagecode="1033" />
+                <displayname description="Optjente dage" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Total vacation days accrued this holiday year (2.08 per month)" languagecode="1033" />
+                <Description description="Samlet antal feriedage optjent i dette ferieår (2,08 pr. måned)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Used Days (Approved absences of type Ferie) -->
+            <attribute PhysicalName="cr_useddays">
+              <Type>decimal</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Used Days" languagecode="1033" />
+                <displayname description="Brugte dage" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Vacation days used (approved registrations)" languagecode="1033" />
+                <Description description="Brugte feriedage (godkendte registreringer)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Pending Days (Pending approval absences) -->
+            <attribute PhysicalName="cr_pendingdays">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Pending Days" languagecode="1033" />
+                <displayname description="Afventende dage" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Vacation days pending approval" languagecode="1033" />
+                <Description description="Feriedage afventer godkendelse" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Available Days (Calculated: accrued + carried over - used - pending) -->
+            <attribute PhysicalName="cr_availabledays">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>-50</MinValue>
+              <MaxValue>100</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Available Days" languagecode="1033" />
+                <displayname description="Tilgængelige dage" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Available vacation days (accrued + carried over - used - pending)" languagecode="1033" />
+                <Description description="Tilgængelige feriedage (optjente + overført - brugte - afventende)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Carried Over Days (From previous holiday year, max 5 days typically) - LEGACY -->
+            <attribute PhysicalName="cr_carriedoverdays">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>25</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Carried Over Days (Legacy)" languagecode="1033" />
+                <displayname description="Overførte dage (legacy)" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Legacy field - use Transferred In Days instead" languagecode="1033" />
+                <Description description="Legacy felt - brug Overførte dage (ind) i stedet" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Transferred In Days (Ferieloven §19 - days transferred from previous holiday year) -->
+            <attribute PhysicalName="cr_transferredindays">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Transferred In Days" languagecode="1033" />
+                <displayname description="Overførte dage (ind)" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Vacation days transferred in from previous holiday year (requires written agreement)" languagecode="1033" />
+                <Description description="Feriedage overført fra forrige ferieår (kræver skriftlig aftale)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Transferred Out Days (days agreed to transfer to next holiday year) -->
+            <attribute PhysicalName="cr_transferredoutdays">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Transferred Out Days" languagecode="1033" />
+                <displayname description="Overførte dage (ud)" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Vacation days to be transferred to next holiday year (max 5 per year)" languagecode="1033" />
+                <Description description="Feriedage der skal overføres til næste ferieår (max 5 pr. år)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Has Transfer Agreement -->
+            <attribute PhysicalName="cr_hastransferagreement">
+              <Type>bit</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <DefaultValue>0</DefaultValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Has Transfer Agreement" languagecode="1033" />
+                <displayname description="Har overførselsaftale" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Whether a written agreement exists for transferring vacation days" languagecode="1033" />
+                <Description description="Om der er en skriftlig aftale om overførsel af feriedage" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Transfer Agreement Date -->
+            <attribute PhysicalName="cr_transferagreementdate">
+              <Type>datetime</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Transfer Agreement Date" languagecode="1033" />
+                <displayname description="Overførselsaftaledato" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Date when transfer agreement was made (must be by December 31)" languagecode="1033" />
+                <Description description="Dato hvor overførselsaftalen blev indgået (skal være inden 31. december)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Feriefridage Accrued (Contract-based extra days) -->
+            <attribute PhysicalName="cr_feriefridageaccrued">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>20</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Accrued" languagecode="1033" />
+                <displayname description="Feriefridage optjent" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Contract-based extra holiday days accrued (typically 5 per year)" languagecode="1033" />
+                <Description description="Kontraktbaserede ekstra feriedage optjent (typisk 5 om året)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Feriefridage Used -->
+            <attribute PhysicalName="cr_feriefridageused">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>50</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Used" languagecode="1033" />
+                <displayname description="Feriefridage brugt" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Contract-based extra holiday days used" languagecode="1033" />
+                <Description description="Kontraktbaserede ekstra feriedage brugt" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Feriefridage Available -->
+            <attribute PhysicalName="cr_feriefridageavailable">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>-20</MinValue>
+              <MaxValue>20</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Available" languagecode="1033" />
+                <displayname description="Feriefridage tilgængelige" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Feriefridage Transferred In (company policy dependent) -->
+            <attribute PhysicalName="cr_feriefridagetransferredin">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>20</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Transferred In" languagecode="1033" />
+                <displayname description="Feriefridage overført (ind)" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Contract-based extra days transferred from previous year (company policy)" languagecode="1033" />
+                <Description description="Kontraktbaserede ekstra dage overført fra forrige år (firmapolitik)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Feriefridage Transferred Out (company policy dependent) -->
+            <attribute PhysicalName="cr_feriefridagetransferredout">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>20</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Transferred Out" languagecode="1033" />
+                <displayname description="Feriefridage overført (ud)" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Contract-based extra days to transfer to next year (company policy)" languagecode="1033" />
+                <Description description="Kontraktbaserede ekstra dage til overførsel til næste år (firmapolitik)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Last Accrual Date -->
+            <attribute PhysicalName="cr_lastaccrualdate">
+              <Type>datetime</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Last Accrual Date" languagecode="1033" />
+                <displayname description="Seneste optjeningsdato" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Date of the last monthly accrual" languagecode="1033" />
+                <Description description="Dato for seneste månedlige optjening" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Employment Start Date -->
+            <attribute PhysicalName="cr_employmentstartdate">
+              <Type>datetime</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employment Start Date" languagecode="1033" />
+                <displayname description="Ansættelsesdato" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Employee's start date for accrual calculation" languagecode="1033" />
+                <Description description="Medarbejderens startdato til optjeningsberegning" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Is Active -->
+            <attribute PhysicalName="cr_isactive">
+              <Type>bit</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <DefaultValue>1</DefaultValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Is Active" languagecode="1033" />
+                <displayname description="Er aktiv" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Whether this balance record is for the current holiday year" languagecode="1033" />
+                <Description description="Om denne saldo er for det aktuelle ferieår" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+          </attributes>
+          <EntitySetName>cr_holidaybalances</EntitySetName>
+          <IsBPFEntity>0</IsBPFEntity>
+          <IsCustomEntity>1</IsCustomEntity>
+          <IsActivityParty>0</IsActivityParty>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsVisibleInMobile>1</IsVisibleInMobile>
+          <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+          <IsReadOnlyInMobileClient>0</IsReadOnlyInMobileClient>
+          <HasActivities>0</HasActivities>
+          <HasNotes>0</HasNotes>
+          <HasFeedback>0</HasFeedback>
+          <IsConnectionsEnabled>0</IsConnectionsEnabled>
+          <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+          <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+          <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+          <IsSLAEnabled>0</IsSLAEnabled>
+          <IsDuplicateDetectionEnabled>1</IsDuplicateDetectionEnabled>
+          <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+          <IsMailMergeEnabled>0</IsMailMergeEnabled>
+          <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+          <CanCreateCharts>1</CanCreateCharts>
+          <CanCreateViews>1</CanCreateViews>
+          <CanCreateForms>1</CanCreateForms>
+          <CanCreateAttributes>1</CanCreateAttributes>
+          <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+          <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+          <CanBeInManyToMany>1</CanBeInManyToMany>
+          <CanBeInCustomEntityAssociation>1</CanBeInCustomEntityAssociation>
+          <CanEnableSyncToExternalSearchIndex>1</CanEnableSyncToExternalSearchIndex>
+          <SyncToExternalSearchIndex>0</SyncToExternalSearchIndex>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <CanChangeHierarchicalRelationship>1</CanChangeHierarchicalRelationship>
+          <IconSmallName xsi:nil="true" />
+          <IconMediumName xsi:nil="true" />
+          <IconLargeName xsi:nil="true" />
+          <IconVectorName xsi:nil="true" />
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <EntityColor>#2e7d32</EntityColor>
+        </entity>
+      </EntityInfo>
+    </Entity>
+
+    <!-- Accrual History Table (Audit trail for monthly accruals) -->
+    <Entity Name="cr_accrualhistory" unmodifiedName="cr_accrualhistory">
+      <EntityInfo>
+        <entity Name="cr_accrualhistory">
+          <LocalizedNames>
+            <LocalizedName description="Accrual History" languagecode="1033" />
+            <LocalizedName description="Optjeningshistorik" languagecode="1030" />
+          </LocalizedNames>
+          <LocalizedCollectionNames>
+            <LocalizedCollectionName description="Accrual History Records" languagecode="1033" />
+            <LocalizedCollectionName description="Optjeningshistorik" languagecode="1030" />
+          </LocalizedCollectionNames>
+          <Descriptions>
+            <Description description="Audit trail for monthly holiday accruals" languagecode="1033" />
+            <Description description="Revisionslog for månedlige ferieoptjeninger" languagecode="1030" />
+          </Descriptions>
+          <attributes>
+            <!-- Primary Name Field -->
+            <attribute PhysicalName="cr_name">
+              <Type>nvarchar</Type>
+              <Length>200</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <IsLocalizable>0</IsLocalizable>
+              <displaynames>
+                <displayname description="Name" languagecode="1033" />
+                <displayname description="Navn" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Auto-generated: EmployeeName - Month Year" languagecode="1033" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Employee Email -->
+            <attribute PhysicalName="cr_employeeemail">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <Format>Email</Format>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Email" languagecode="1033" />
+                <displayname description="Medarbejder e-mail" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Employee Name -->
+            <attribute PhysicalName="cr_employeename">
+              <Type>nvarchar</Type>
+              <Length>100</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Employee Name" languagecode="1033" />
+                <displayname description="Medarbejder" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Holiday Year -->
+            <attribute PhysicalName="cr_holidayyear">
+              <Type>nvarchar</Type>
+              <Length>20</Length>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Holiday Year" languagecode="1033" />
+                <displayname description="Ferieår" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Accrual Date -->
+            <attribute PhysicalName="cr_accrualdate">
+              <Type>datetime</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <Format>DateOnly</Format>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Accrual Date" languagecode="1033" />
+                <displayname description="Optjeningsdato" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Date when the accrual was processed" languagecode="1033" />
+                <Description description="Dato for optjeningsbehandling" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Accrual Month (1-12) -->
+            <attribute PhysicalName="cr_accrualmonth">
+              <Type>int</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>1</MinValue>
+              <MaxValue>12</MaxValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Accrual Month" languagecode="1033" />
+                <displayname description="Optjeningsmåned" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Accrual Year -->
+            <attribute PhysicalName="cr_accrualyear">
+              <Type>int</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>2020</MinValue>
+              <MaxValue>2100</MaxValue>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Accrual Year" languagecode="1033" />
+                <displayname description="Optjeningsår" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Days Accrued -->
+            <attribute PhysicalName="cr_daysaccrued">
+              <Type>decimal</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>10</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Days Accrued" languagecode="1033" />
+                <displayname description="Optjente dage" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Number of vacation days accrued (typically 2.08)" languagecode="1033" />
+                <Description description="Antal optjente feriedage (typisk 2,08)" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Feriefridage Accrued -->
+            <attribute PhysicalName="cr_feriefridageaccrued">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>5</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Feriefridage Accrued" languagecode="1033" />
+                <displayname description="Feriefridage optjent" languagecode="1030" />
+              </displaynames>
+            </attribute>
+
+            <!-- Balance After Accrual -->
+            <attribute PhysicalName="cr_balanceafteraccrual">
+              <Type>decimal</Type>
+              <RequiredLevel>none</RequiredLevel>
+              <MinValue>0</MinValue>
+              <MaxValue>100</MaxValue>
+              <Precision>2</Precision>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Disabled</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Balance After Accrual" languagecode="1033" />
+                <displayname description="Saldo efter optjening" languagecode="1030" />
+              </displaynames>
+              <Descriptions>
+                <Description description="Total balance after this accrual was applied" languagecode="1033" />
+                <Description description="Samlet saldo efter denne optjening blev anvendt" languagecode="1030" />
+              </Descriptions>
+            </attribute>
+
+            <!-- Accrual Type (Choice) -->
+            <attribute PhysicalName="cr_accrualtype">
+              <Type>picklist</Type>
+              <RequiredLevel>required</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Accrual Type" languagecode="1033" />
+                <displayname description="Optjeningstype" languagecode="1030" />
+              </displaynames>
+              <optionset Name="cr_accrualtype">
+                <OptionSetType>Picklist</OptionSetType>
+                <IsGlobal>0</IsGlobal>
+                <IntroducedVersion>1.0.0.0</IntroducedVersion>
+                <displaynames>
+                  <displayname description="Accrual Type" languagecode="1033" />
+                  <displayname description="Optjeningstype" languagecode="1030" />
+                </displaynames>
+                <options>
+                  <option value="100000000">
+                    <labels>
+                      <label description="Monthly Accrual" languagecode="1033" />
+                      <label description="Månedlig optjening" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000001">
+                    <labels>
+                      <label description="Year Start Carryover" languagecode="1033" />
+                      <label description="Årsstart overførsel" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000002">
+                    <labels>
+                      <label description="Manual Adjustment" languagecode="1033" />
+                      <label description="Manuel justering" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000003">
+                    <labels>
+                      <label description="Initial Balance" languagecode="1033" />
+                      <label description="Startsaldo" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000004">
+                    <labels>
+                      <label description="Year End Transfer Out" languagecode="1033" />
+                      <label description="Årsslut overførsel (ud)" languagecode="1030" />
+                    </labels>
+                  </option>
+                  <option value="100000005">
+                    <labels>
+                      <label description="Feriefridage Accrual" languagecode="1033" />
+                      <label description="Feriefridage optjening" languagecode="1030" />
+                    </labels>
+                  </option>
+                </options>
+              </optionset>
+            </attribute>
+
+            <!-- Notes -->
+            <attribute PhysicalName="cr_notes">
+              <Type>ntext</Type>
+              <Length>1000</Length>
+              <RequiredLevel>none</RequiredLevel>
+              <DisplayMask>ValidForAdvancedFind|ValidForForm|ValidForGrid</DisplayMask>
+              <ImeMode>Auto</ImeMode>
+              <ValidForCreateApi>1</ValidForCreateApi>
+              <ValidForReadApi>1</ValidForReadApi>
+              <ValidForUpdateApi>1</ValidForUpdateApi>
+              <IsAuditEnabled>1</IsAuditEnabled>
+              <displaynames>
+                <displayname description="Notes" languagecode="1033" />
+                <displayname description="Noter" languagecode="1030" />
+              </displaynames>
+            </attribute>
+          </attributes>
+          <EntitySetName>cr_accrualhistories</EntitySetName>
+          <IsBPFEntity>0</IsBPFEntity>
+          <IsCustomEntity>1</IsCustomEntity>
+          <IsActivityParty>0</IsActivityParty>
+          <OwnershipTypeMask>UserOwned</OwnershipTypeMask>
+          <IsAuditEnabled>1</IsAuditEnabled>
+          <IsVisibleInMobile>1</IsVisibleInMobile>
+          <IsVisibleInMobileClient>1</IsVisibleInMobileClient>
+          <IsReadOnlyInMobileClient>1</IsReadOnlyInMobileClient>
+          <HasActivities>0</HasActivities>
+          <HasNotes>0</HasNotes>
+          <HasFeedback>0</HasFeedback>
+          <IsConnectionsEnabled>0</IsConnectionsEnabled>
+          <IsDocumentManagementEnabled>0</IsDocumentManagementEnabled>
+          <IsOneNoteIntegrationEnabled>0</IsOneNoteIntegrationEnabled>
+          <IsKnowledgeManagementEnabled>0</IsKnowledgeManagementEnabled>
+          <IsSLAEnabled>0</IsSLAEnabled>
+          <IsDuplicateDetectionEnabled>0</IsDuplicateDetectionEnabled>
+          <IsBusinessProcessEnabled>0</IsBusinessProcessEnabled>
+          <IsMailMergeEnabled>0</IsMailMergeEnabled>
+          <IsInteractionCentricEnabled>0</IsInteractionCentricEnabled>
+          <CanCreateCharts>1</CanCreateCharts>
+          <CanCreateViews>1</CanCreateViews>
+          <CanCreateForms>1</CanCreateForms>
+          <CanCreateAttributes>1</CanCreateAttributes>
+          <CanBeRelatedEntityInRelationship>1</CanBeRelatedEntityInRelationship>
+          <CanBePrimaryEntityInRelationship>1</CanBePrimaryEntityInRelationship>
+          <CanBeInManyToMany>1</CanBeInManyToMany>
+          <CanBeInCustomEntityAssociation>1</CanBeInCustomEntityAssociation>
+          <CanEnableSyncToExternalSearchIndex>1</CanEnableSyncToExternalSearchIndex>
+          <SyncToExternalSearchIndex>0</SyncToExternalSearchIndex>
+          <CanModifyAdditionalSettings>1</CanModifyAdditionalSettings>
+          <CanChangeHierarchicalRelationship>1</CanChangeHierarchicalRelationship>
+          <IconSmallName xsi:nil="true" />
+          <IconMediumName xsi:nil="true" />
+          <IconLargeName xsi:nil="true" />
+          <IconVectorName xsi:nil="true" />
+          <IntroducedVersion>1.0.0.0</IntroducedVersion>
+          <EntityColor>#1565c0</EntityColor>
+        </entity>
+      </EntityInfo>
+    </Entity>
+  </Entities>
+</ImportExportXml>

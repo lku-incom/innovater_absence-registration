@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24014.198" SolutionPackageVersion="9.2" languagecode="1030" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <SolutionManifest>
+    <UniqueName>AbsenceRegistration</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="Absence Registration" languagecode="1033" />
+      <LocalizedName description="Fraværsregistrering" languagecode="1030" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="Vacation and absence registration solution for Danish holiday law compliance" languagecode="1033" />
+      <Description description="Ferie- og fraværsregistrering i henhold til dansk ferielov" languagecode="1030" />
+    </Descriptions>
+    <Version>1.0.0.0</Version>
+    <Managed>0</Managed>
+    <Publisher>
+      <UniqueName>Innovater</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Innovater" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions>
+        <Description description="Innovater A/S" languagecode="1033" />
+      </Descriptions>
+      <EMailAddress xsi:nil="true" />
+      <SupportingWebsiteUrl>https://www.innovater.dk</SupportingWebsiteUrl>
+      <CustomizationPrefix>cr</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true" />
+          <County xsi:nil="true" />
+          <Country xsi:nil="true" />
+          <Fax xsi:nil="true" />
+          <FreightTermsCode xsi:nil="true" />
+          <ImportSequenceNumber xsi:nil="true" />
+          <Latitude xsi:nil="true" />
+          <Line1 xsi:nil="true" />
+          <Line2 xsi:nil="true" />
+          <Line3 xsi:nil="true" />
+          <Longitude xsi:nil="true" />
+          <Name xsi:nil="true" />
+          <PostalCode xsi:nil="true" />
+          <PostOfficeBox xsi:nil="true" />
+          <PrimaryContactName xsi:nil="true" />
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true" />
+          <Telephone1 xsi:nil="true" />
+          <Telephone2 xsi:nil="true" />
+          <Telephone3 xsi:nil="true" />
+          <TimeZoneRuleVersionNumber xsi:nil="true" />
+          <UPSZone xsi:nil="true" />
+          <UTCOffset xsi:nil="true" />
+          <UTCConversionTimeZoneCode xsi:nil="true" />
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="1" schemaName="cr_absenceregistration" behavior="0" />
+      <RootComponent type="1" schemaName="cr_holidaybalance" behavior="0" />
+      <RootComponent type="1" schemaName="cr_accrualhistory" behavior="0" />
+    </RootComponents>
+    <MissingDependencies />
+  </SolutionManifest>
+</ImportExportXml>

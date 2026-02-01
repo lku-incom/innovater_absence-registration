@@ -1,0 +1,179 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    }
+  },
+  "triggers": {
+    "When_a_row_is_added_modified_or_deleted": {
+      "type": "OpenApiConnectionWebhook",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_commondataserviceforapps",
+          "operationId": "SubscribeWebhookTrigger",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        },
+        "parameters": {
+          "subscriptionRequest/message": 3,
+          "subscriptionRequest/entityname": "cr153_absenceregistration",
+          "subscriptionRequest/scope": 4,
+          "subscriptionRequest/filterexpression": "cr153_status eq 100000001"
+        },
+        "authentication": "@parameters('$connections')['shared_commondataserviceforapps']['connectionId']"
+      },
+      "description": "Triggers when a registration status is changed to 'Afventer godkendelse' (100000001)"
+    }
+  },
+  "actions": {
+    "Get_the_registration_details": {
+      "runAfter": {},
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_commondataserviceforapps",
+          "operationId": "GetItem",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+        },
+        "parameters": {
+          "entityName": "cr153_absenceregistrations",
+          "recordId": "@triggerOutputs()?['body/cr153_absenceregistrationid']",
+          "$select": "cr153_absenceregistrationid,cr153_employeename,cr153_employeeemail,cr153_approvername,cr153_approveremail,cr153_startdate,cr153_enddate,cr153_numberofdays,cr153_absencetype,cr153_notes,cr153_status"
+        },
+        "authentication": "@parameters('$connections')['shared_commondataserviceforapps']['connectionId']"
+      },
+      "description": "Fetches the full registration record including the formatted absence type label"
+    },
+    "Start_and_wait_for_an_approval": {
+      "runAfter": {
+        "Get_the_registration_details": ["Succeeded"]
+      },
+      "type": "OpenApiConnectionWebhook",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_approvals",
+          "operationId": "StartAndWaitForAnApproval",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_approvals"
+        },
+        "parameters": {
+          "approvalType": "Basic",
+          "WebhookApprovalCreationInput/title": "Fraværsanmodning: @{outputs('Get_the_registration_details')?['body/cr153_employeename']}",
+          "WebhookApprovalCreationInput/assignedTo": "@outputs('Get_the_registration_details')?['body/cr153_approveremail']",
+          "WebhookApprovalCreationInput/details": "## Fraværsanmodning\n\n**Medarbejder:** @{outputs('Get_the_registration_details')?['body/cr153_employeename']}\n\n**Email:** @{outputs('Get_the_registration_details')?['body/cr153_employeeemail']}\n\n**Type:** @{outputs('Get_the_registration_details')?['body/cr153_absencetype@OData.Community.Display.V1.FormattedValue']}\n\n**Periode:** @{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_startdate'], 'dd-MM-yyyy')} til @{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_enddate'], 'dd-MM-yyyy')}\n\n**Antal dage:** @{outputs('Get_the_registration_details')?['body/cr153_numberofdays']}\n\n**Bemærkninger:** @{if(empty(outputs('Get_the_registration_details')?['body/cr153_notes']), 'Ingen', outputs('Get_the_registration_details')?['body/cr153_notes'])}",
+          "WebhookApprovalCreationInput/enableNotifications": true,
+          "WebhookApprovalCreationInput/enableReassignment": true
+        },
+        "authentication": "@parameters('$connections')['shared_approvals']['connectionId']"
+      },
+      "description": "Sends approval request to the manager via Teams and email, waits for response"
+    },
+    "Condition_-_Check_approval_outcome": {
+      "runAfter": {
+        "Start_and_wait_for_an_approval": ["Succeeded"]
+      },
+      "type": "If",
+      "expression": {
+        "and": [
+          {
+            "equals": [
+              "@outputs('Start_and_wait_for_an_approval')?['body/outcome']",
+              "Approve"
+            ]
+          }
+        ]
+      },
+      "actions": {
+        "Update_registration_-_Approved": {
+          "runAfter": {},
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "UpdateRecord",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "cr153_absenceregistrations",
+              "recordId": "@triggerOutputs()?['body/cr153_absenceregistrationid']",
+              "item/cr153_status": 100000002,
+              "item/cr153_approvaldate": "@utcNow()",
+              "item/cr153_approvercomments": "@{if(empty(outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments']), '', outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments'])}"
+            },
+            "authentication": "@parameters('$connections')['shared_commondataserviceforapps']['connectionId']"
+          },
+          "description": "Sets status to Godkendt (100000002) and stores approval date"
+        },
+        "Send_email_-_Approved": {
+          "runAfter": {
+            "Update_registration_-_Approved": ["Succeeded"]
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_office365",
+              "operationId": "SendEmailV2",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+            },
+            "parameters": {
+              "emailMessage/To": "@outputs('Get_the_registration_details')?['body/cr153_employeeemail']",
+              "emailMessage/Subject": "Din fraværsanmodning er godkendt",
+              "emailMessage/Body": "<html><body><h2>Din fraværsanmodning er godkendt</h2><p>Hej @{outputs('Get_the_registration_details')?['body/cr153_employeename']},</p><p>Din anmodning om <strong>@{outputs('Get_the_registration_details')?['body/cr153_absencetype@OData.Community.Display.V1.FormattedValue']}</strong> fra <strong>@{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_startdate'], 'dd-MM-yyyy')}</strong> til <strong>@{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_enddate'], 'dd-MM-yyyy')}</strong> (@{outputs('Get_the_registration_details')?['body/cr153_numberofdays']} dage) er blevet godkendt af @{outputs('Get_the_registration_details')?['body/cr153_approvername']}.</p><p>Med venlig hilsen,<br/>Fraværsregistrering</p></body></html>",
+              "emailMessage/Importance": "Normal"
+            },
+            "authentication": "@parameters('$connections')['shared_office365']['connectionId']"
+          },
+          "description": "Notifies employee that their request was approved"
+        }
+      },
+      "else": {
+        "actions": {
+          "Update_registration_-_Rejected": {
+            "runAfter": {},
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "connectionName": "shared_commondataserviceforapps",
+                "operationId": "UpdateRecord",
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+              },
+              "parameters": {
+                "entityName": "cr153_absenceregistrations",
+                "recordId": "@triggerOutputs()?['body/cr153_absenceregistrationid']",
+                "item/cr153_status": 100000003,
+                "item/cr153_approvaldate": "@utcNow()",
+                "item/cr153_approvercomments": "@{if(empty(outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments']), 'Ingen kommentar', outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments'])}"
+              },
+              "authentication": "@parameters('$connections')['shared_commondataserviceforapps']['connectionId']"
+            },
+            "description": "Sets status to Afvist (100000003) and stores rejection reason"
+          },
+          "Send_email_-_Rejected": {
+            "runAfter": {
+              "Update_registration_-_Rejected": ["Succeeded"]
+            },
+            "type": "OpenApiConnection",
+            "inputs": {
+              "host": {
+                "connectionName": "shared_office365",
+                "operationId": "SendEmailV2",
+                "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+              },
+              "parameters": {
+                "emailMessage/To": "@outputs('Get_the_registration_details')?['body/cr153_employeeemail']",
+                "emailMessage/Subject": "Din fraværsanmodning er afvist",
+                "emailMessage/Body": "<html><body><h2>Din fraværsanmodning er afvist</h2><p>Hej @{outputs('Get_the_registration_details')?['body/cr153_employeename']},</p><p>Din anmodning om <strong>@{outputs('Get_the_registration_details')?['body/cr153_absencetype@OData.Community.Display.V1.FormattedValue']}</strong> fra <strong>@{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_startdate'], 'dd-MM-yyyy')}</strong> til <strong>@{formatDateTime(outputs('Get_the_registration_details')?['body/cr153_enddate'], 'dd-MM-yyyy')}</strong> (@{outputs('Get_the_registration_details')?['body/cr153_numberofdays']} dage) er blevet afvist af @{outputs('Get_the_registration_details')?['body/cr153_approvername']}.</p><p><strong>Kommentar:</strong> @{if(empty(outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments']), 'Ingen kommentar', outputs('Start_and_wait_for_an_approval')?['body/responses'][0]?['comments'])}</p><p>Kontakt venligst din leder for yderligere information.</p><p>Med venlig hilsen,<br/>Fraværsregistrering</p></body></html>",
+                "emailMessage/Importance": "Normal"
+              },
+              "authentication": "@parameters('$connections')['shared_office365']['connectionId']"
+            },
+            "description": "Notifies employee that their request was rejected with reason"
+          }
+        }
+      },
+      "description": "Branches flow based on approval outcome (Approve/Reject)"
+    }
+  },
+  "outputs": {}
+}

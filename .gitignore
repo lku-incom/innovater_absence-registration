@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+lib/
+release/
+temp/
+sharepoint/solution/*.sppkg
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.sln.docstates
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# SPFx specific
+*.manifest.json.ts
+sharepoint/solution/debug/
+
+# Environment
+.env
+.env.local

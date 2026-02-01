@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "absence-registration-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/absenceRegistration/AbsenceRegistrationWebPart.js",
+          "manifest": "./src/webparts/absenceRegistration/AbsenceRegistrationWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "AbsenceRegistrationWebPartStrings": "lib/webparts/absenceRegistration/loc/{locale}.js"
+  }
+}
