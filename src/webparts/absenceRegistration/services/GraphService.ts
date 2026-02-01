@@ -48,8 +48,7 @@ export class GraphService {
         department: user.department || '',
         jobTitle: user.jobTitle || '',
       };
-    } catch (error) {
-      console.error('Error fetching current user:', error);
+    } catch {
       throw new Error('Kunne ikke hente brugeroplysninger');
     }
   }
@@ -73,9 +72,8 @@ export class GraphService {
       }
 
       return undefined;
-    } catch (error) {
+    } catch {
       // User might not have a manager
-      console.warn('No manager found or error fetching manager:', error);
       return undefined;
     }
   }
@@ -101,8 +99,7 @@ export class GraphService {
       }
 
       return undefined;
-    } catch (error) {
-      console.error('Error fetching user by email:', error);
+    } catch {
       return undefined;
     }
   }
@@ -127,8 +124,7 @@ export class GraphService {
         displayName: user.displayName || '',
         jobTitle: user.jobTitle || '',
       }));
-    } catch (error) {
-      console.error('Error searching users:', error);
+    } catch {
       return [];
     }
   }

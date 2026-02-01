@@ -79,8 +79,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
         try {
           userInfo = await graphService.getFullUserInfo();
           setCurrentUser(userInfo);
-        } catch (graphError) {
-          console.error('Graph API error:', graphError);
+        } catch {
           // Create minimal user info from context if Graph fails
           userInfo = {
             id: 0,
@@ -89,7 +88,6 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
             manager: undefined,
           };
           setCurrentUser(userInfo);
-          console.warn('Using fallback user info from context');
         }
 
         // Load user's registrations and pending approvals
@@ -101,21 +99,19 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
             ]);
             setRegistrations(userRegistrations);
             setPendingApprovals(approvals);
-          } catch (dataverseError) {
-            console.error('Dataverse error:', dataverseError);
+          } catch {
             setRegistrations([]);
             setPendingApprovals([]);
           }
         }
-      } catch (error) {
-        console.error('Error initializing:', error);
+      } catch {
         setErrorMessage('Kunne ikke indlæse data. Prøv venligst igen.');
       } finally {
         setIsLoading(false);
       }
     };
 
-    initializeData().catch(console.error);
+    initializeData().catch(() => { /* error handled internally */ });
   }, [context, dataverseUrl]);
 
   const loadRegistrations = useCallback(async (): Promise<void> => {
@@ -126,8 +122,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       const dataverseService = DataverseService.getInstance();
       const userRegistrations = await dataverseService.getMyRegistrations(currentUser.email);
       setRegistrations(userRegistrations);
-    } catch (error) {
-      console.error('Error loading registrations:', error);
+    } catch {
       setErrorMessage('Kunne ikke indlæse registreringer.');
     } finally {
       setIsLoading(false);
@@ -142,8 +137,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       const dataverseService = DataverseService.getInstance();
       const approvals = await dataverseService.getPendingApprovals(currentUser.email);
       setPendingApprovals(approvals);
-    } catch (error) {
-      console.error('Error loading pending approvals:', error);
+    } catch {
       setErrorMessage('Kunne ikke indlæse godkendelser.');
     } finally {
       setIsLoadingApprovals(false);
@@ -162,8 +156,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       ]);
       setAllRegistrations(all);
       setAccrualHistoryCount(historyCount);
-    } catch (error) {
-      console.error('Error loading all registrations:', error);
+    } catch {
       setErrorMessage('Kunne ikke indlæse alle registreringer.');
     } finally {
       setIsLoadingAdmin(false);
@@ -191,7 +184,6 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       setIsViewOnly(false);
       setActiveTab('list');
     } catch (error) {
-      console.error('Error saving registration:', error);
       const errorMsg = error instanceof Error ? error.message : 'Ukendt fejl';
       setErrorMessage(`Kunne ikke gemme registrering: ${errorMsg}`);
     } finally {
@@ -223,7 +215,6 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       setIsViewOnly(false);
       setActiveTab('list');
     } catch (error) {
-      console.error('Error submitting registration:', error);
       const errorMsg = error instanceof Error ? error.message : 'Ukendt fejl';
       setErrorMessage(`Kunne ikke indsende registrering: ${errorMsg}`);
     } finally {
@@ -259,8 +250,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       const dataverseService = DataverseService.getInstance();
       await dataverseService.deleteRegistration(id);
       await loadRegistrations();
-    } catch (error) {
-      console.error('Error deleting registration:', error);
+    } catch {
       setErrorMessage('Kunne ikke slette registrering. Prøv venligst igen.');
     } finally {
       setIsLoading(false);
@@ -275,8 +265,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       const dataverseService = DataverseService.getInstance();
       await dataverseService.submitForApproval(id);
       await loadRegistrations();
-    } catch (error) {
-      console.error('Error submitting for approval:', error);
+    } catch {
       setErrorMessage('Kunne ikke indsende til godkendelse. Prøv venligst igen.');
     } finally {
       setIsLoading(false);
@@ -292,8 +281,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       await dataverseService.deleteAllRegistrations();
       await loadAllRegistrations();
       await loadRegistrations();
-    } catch (error) {
-      console.error('Error deleting all registrations:', error);
+    } catch {
       setErrorMessage('Kunne ikke slette alle registreringer. Prøv venligst igen.');
     } finally {
       setIsLoadingAdmin(false);
@@ -309,8 +297,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       await dataverseService.deleteRegistration(id);
       await loadAllRegistrations();
       await loadRegistrations();
-    } catch (error) {
-      console.error('Error deleting registration:', error);
+    } catch {
       setErrorMessage('Kunne ikke slette registrering. Prøv venligst igen.');
     } finally {
       setIsLoadingAdmin(false);
@@ -327,7 +314,6 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       await loadAllRegistrations();
       return deletedCount;
     } catch (error) {
-      console.error('Error deleting all accrual history:', error);
       setErrorMessage('Kunne ikke slette al optjeningshistorik. Prøv venligst igen.');
       throw error;
     } finally {
@@ -346,7 +332,6 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       await dataverseService.createAccrualHistory(accrual);
       await loadAllRegistrations();
     } catch (error) {
-      console.error('Error creating accrual history:', error);
       setErrorMessage('Kunne ikke oprette optjening. Prøv venligst igen.');
       throw error;
     } finally {
@@ -372,7 +357,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
       if (item.props.itemKey === 'admin' && isAdmin) {
         setEditingRegistration(undefined);
         setIsViewOnly(false);
-        loadAllRegistrations().catch(console.error);
+        loadAllRegistrations().catch(() => { /* error handled internally */ });
       }
     }
   };

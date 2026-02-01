@@ -488,8 +488,7 @@ export class DataverseService {
         `${ACCRUAL_HISTORY_TABLE}?$select=cr_accrualhistoryid`
       );
       return result.value.length;
-    } catch (error) {
-      console.error('Error getting accrual history count:', error);
+    } catch {
       return 0;
     }
   }
@@ -517,8 +516,7 @@ export class DataverseService {
       );
 
       return result.value.map((entity) => this.mapEntityToAccrualHistory(entity));
-    } catch (error) {
-      console.error('Error fetching accrual history for user:', error);
+    } catch {
       return [];
     }
   }
@@ -742,8 +740,7 @@ export class DataverseService {
       }
 
       return balances;
-    } catch (error) {
-      console.error('Error fetching all employee balances:', error);
+    } catch {
       return [];
     }
   }

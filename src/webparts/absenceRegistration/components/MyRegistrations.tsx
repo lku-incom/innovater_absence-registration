@@ -69,8 +69,7 @@ const MyRegistrations: React.FC<IMyRegistrationsProps> = (props) => {
 
       setHolidayBalance(balance);
       setAccrualHistory(history);
-    } catch (error) {
-      console.error('Error fetching holiday balance:', error);
+    } catch {
       setBalanceError('Kunne ikke hente feriesaldo');
     } finally {
       setIsLoadingBalance(false);

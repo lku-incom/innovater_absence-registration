@@ -86,8 +86,7 @@ const AdminReport: React.FC<IAdminReportProps> = ({ context, onClose }) => {
         totalAvailableFeriefridage: balances.reduce((sum, b) => sum + b.AvailableFeriefridage, 0),
       };
       setStats(aggregated);
-    } catch (err) {
-      console.error('Error fetching employee balances:', err);
+    } catch {
       setError('Kunne ikke hente medarbejderdata. Prøv igen senere.');
     } finally {
       setIsLoading(false);

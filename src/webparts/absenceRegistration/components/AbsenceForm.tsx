@@ -186,8 +186,7 @@ const AbsenceForm: React.FC<IAbsenceFormProps> = (props) => {
           }));
 
           setApproverOptions(options);
-        } catch (error) {
-          console.error('Error searching users:', error);
+        } catch {
           setApproverOptions([]);
         } finally {
           setIsSearching(false);

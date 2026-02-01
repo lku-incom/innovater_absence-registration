@@ -254,8 +254,7 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
       setUserSearchResults([]);
       setSelectedUser(undefined);
       onRefresh();
-    } catch (error) {
-      console.error('Error creating accrual history:', error);
+    } catch {
       setFormError('Kunne ikke oprette optjening. Prøv venligst igen.');
     } finally {
       setIsAddingAccrual(false);
@@ -286,8 +285,7 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
       const results = await graphService.searchUsers(searchText);
       setUserSearchResults(results);
       setShowUserDropdown(results.length > 0);
-    } catch (error) {
-      console.error('Error searching users:', error);
+    } catch {
       setUserSearchResults([]);
     } finally {
       setIsSearching(false);
