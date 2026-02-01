@@ -9,7 +9,10 @@
     "test": "gulp test",
     "bundle": "gulp bundle --ship",
     "package": "gulp package-solution --ship",
-    "serve": "gulp serve"
+    "serve": "gulp serve",
+    "commit": "git add -A && git commit -m",
+    "push": "git add -A && git commit -m \"Update\" && git push",
+    "deploy": "gulp bundle --ship && gulp package-solution --ship && git add -A && git commit -m \"Build and deploy\" && git push"
   },
   "dependencies": {
     "@fluentui/react": "^8.110.0",

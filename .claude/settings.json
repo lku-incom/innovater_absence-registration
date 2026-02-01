@@ -1,0 +1,8 @@
+{
+  "skills": {
+    "build": {
+      "description": "Build SPFx solution, package for SharePoint, commit and push to GitHub",
+      "file": "skills/build.md"
+    }
+  }
+}
