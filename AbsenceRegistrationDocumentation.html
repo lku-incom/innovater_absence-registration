@@ -775,7 +775,8 @@
 │       │   ├── <span class="file">DataverseService.ts</span>          <span class="comment"># Dataverse CRUD</span>
 │       │   ├── <span class="file">GraphService.ts</span>              <span class="comment"># MS Graph API</span>
 │       │   ├── <span class="file">ExcelExportService.ts</span>        <span class="comment"># CSV export</span>
-│       │   └── <span class="file">DanishHolidayService.ts</span>      <span class="comment"># Holiday calc</span>
+│       │   ├── <span class="file">DanishHolidayService.ts</span>      <span class="comment"># Holiday calc</span>
+│       │   └── <span class="file">HolidayTransferService.ts</span>    <span class="comment"># Year-end transfer</span>
 │       ├── <span class="folder">models/</span>
 │       │   ├── <span class="file">IAbsenceRegistration.ts</span>      <span class="comment"># Absence interfaces</span>
 │       │   └── <span class="file">IHolidayBalance.ts</span>           <span class="comment"># Balance interfaces</span>
@@ -992,6 +993,46 @@
                     <div class="info-box-title">&#x26A0;&#xFE0F; Note: Store Bededag</div>
                     <p>Store Bededag (Great Prayer Day) was abolished as a public holiday starting from 2024 and is no longer included in calculations.</p>
                 </div>
+
+                <h3>HolidayTransferService.ts</h3>
+                <p>Handles year-end holiday transfer operations according to the Danish Holiday Act (Ferieloven &sect;19).</p>
+
+                <div class="info-box note">
+                    <div class="info-box-title">&#x1F4CB; Transfer Rules (Ferieloven &sect;19)</div>
+                    <ul>
+                        <li>Only the 5th week (5 days beyond mandatory 20) can be transferred per year</li>
+                        <li>Written agreement required by December 31</li>
+                        <li>First 4 weeks (20 days) MUST be taken or are forfeited</li>
+                        <li>Feriefridage rules depend on company policy (not covered by Ferieloven)</li>
+                    </ul>
+                </div>
+
+                <h4>Key Methods</h4>
+                <pre><code><span class="code-comment">// Validate a transfer request before processing</span>
+<span class="code-keyword">static</span> <span class="code-function">validateTransfer</span>(
+  balance: <span class="code-type">IHolidayBalance</span>,
+  request: <span class="code-type">ITransferRequest</span>
+): <span class="code-type">ITransferValidationResult</span>
+
+<span class="code-comment">// Process a year-end transfer</span>
+<span class="code-keyword">static</span> <span class="code-function">processTransfer</span>(
+  currentBalance: <span class="code-type">IHolidayBalance</span>,
+  request: <span class="code-type">ITransferRequest</span>
+): <span class="code-type">IYearEndProcessingResult</span>
+
+<span class="code-comment">// Calculate year-end summary with recommendations</span>
+<span class="code-keyword">static</span> <span class="code-function">calculateYearEndSummary</span>(balance: <span class="code-type">IHolidayBalance</span>): {
+  totalAvailable: <span class="code-type">number</span>;
+  daysToBeForfeited: <span class="code-type">number</span>;
+  daysTransferableWithAgreement: <span class="code-type">number</span>;
+  recommendations: <span class="code-type">string</span>[];
+}
+
+<span class="code-comment">// Check if approaching transfer deadline</span>
+<span class="code-keyword">static</span> <span class="code-function">isApproachingTransferDeadline</span>(
+  holidayYear: <span class="code-type">string</span>,
+  daysBeforeDeadline?: <span class="code-type">number</span>
+): <span class="code-type">boolean</span></code></pre>
             </section>
 
             <!-- Data Flow Section -->
