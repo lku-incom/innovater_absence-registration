@@ -34,6 +34,7 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
   const [editingRegistration, setEditingRegistration] = useState<IAbsenceRegistration | undefined>(undefined);
   const [isViewOnly, setIsViewOnly] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [impersonatedUser, setImpersonatedUser] = useState<IUserInfo | undefined>(undefined);
   const [isLoadingApprovals, setIsLoadingApprovals] = useState<boolean>(false);
   const [isLoadingAdmin, setIsLoadingAdmin] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -321,6 +322,28 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
     }
   };
 
+  // Handle impersonation - load data for the impersonated user
+  const handleImpersonate = useCallback(async (user: IUserInfo | undefined): Promise<void> => {
+    setImpersonatedUser(user);
+
+    if (user) {
+      // Load registrations for the impersonated user
+      try {
+        setIsLoading(true);
+        const dataverseService = DataverseService.getInstance();
+        const userRegistrations = await dataverseService.getMyRegistrations(user.email);
+        setRegistrations(userRegistrations);
+      } catch {
+        setErrorMessage('Kunne ikke indlæse registreringer for den valgte bruger.');
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      // Revert to current user's registrations
+      await loadRegistrations();
+    }
+  }, [loadRegistrations]);
+
   const handleCreateAccrualHistory = async (
     accrual: Parameters<typeof DataverseService.prototype.createAccrualHistory>[0]
   ): Promise<void> => {
@@ -374,6 +397,41 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
 
   return (
     <div className={styles.absenceRegistration}>
+      {/* Impersonation banner */}
+      {impersonatedUser && (
+        <div style={{
+          backgroundColor: '#fff3cd',
+          border: '1px solid #ffc107',
+          borderRadius: 4,
+          padding: '12px 16px',
+          marginBottom: 16,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 18 }}>👤</span>
+            <span style={{ fontWeight: 500 }}>
+              Du ser nu appen som: <strong>{impersonatedUser.displayName}</strong> ({impersonatedUser.email})
+            </span>
+          </div>
+          <button
+            onClick={() => handleImpersonate(undefined)}
+            style={{
+              backgroundColor: '#856404',
+              color: 'white',
+              border: 'none',
+              borderRadius: 4,
+              padding: '6px 12px',
+              cursor: 'pointer',
+              fontWeight: 500,
+            }}
+          >
+            Afslut visning
+          </button>
+        </div>
+      )}
+
       {/* Error message */}
       {errorMessage && (
         <div className={styles.errorBanner}>
@@ -424,13 +482,13 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
               <MyRegistrations
                 context={context}
                 registrations={registrations}
-                onEdit={handleEdit}
+                onEdit={impersonatedUser ? handleView : handleEdit}
                 onView={handleView}
                 onDelete={handleDelete}
                 onSubmitForApproval={handleSubmitForApproval}
                 isLoading={isLoading}
-                onRefresh={loadRegistrations}
-                currentUserEmail={currentUser?.email}
+                onRefresh={impersonatedUser ? () => handleImpersonate(impersonatedUser) : loadRegistrations}
+                currentUserEmail={impersonatedUser?.email || currentUser?.email}
               />
             </div>
           </PivotItem>
@@ -494,6 +552,8 @@ const AbsenceRegistration: React.FC<IAbsenceRegistrationComponentProps> = (props
                   accrualHistoryCount={accrualHistoryCount}
                   isLoading={isLoadingAdmin}
                   onRefresh={loadAllRegistrations}
+                  impersonatedUser={impersonatedUser}
+                  onImpersonate={handleImpersonate}
                 />
               </div>
             </PivotItem>

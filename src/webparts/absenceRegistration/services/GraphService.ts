@@ -6,8 +6,20 @@
 import { graphfi, SPFx as graphSPFx } from '@pnp/graph';
 import '@pnp/graph/users';
 import '@pnp/graph/photos';
+import '@pnp/graph/groups';
+import '@pnp/graph/members';
 import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { IUserInfo, IManagerInfo } from '../models/IAbsenceRegistration';
+
+/**
+ * Interface for group member information
+ */
+export interface IGroupMember {
+  id: string;
+  displayName: string;
+  email: string;
+  jobTitle?: string;
+}
 
 export class GraphService {
   private static _instance: GraphService;
@@ -153,6 +165,73 @@ export class GraphService {
       ...user,
       manager,
     };
+  }
+
+  /**
+   * Get members of a security group
+   * @param groupId The Azure AD group ID
+   */
+  public async getGroupMembers(groupId: string): Promise<IGroupMember[]> {
+    try {
+      const members = await this._graph.groups.getById(groupId).members();
+
+      return members
+        .filter((member) => (member as { '@odata.type'?: string })['@odata.type'] === '#microsoft.graph.user')
+        .map((member) => ({
+          id: (member as { id?: string }).id || '',
+          displayName: (member as { displayName?: string }).displayName || '',
+          email: (member as { mail?: string }).mail || (member as { userPrincipalName?: string }).userPrincipalName || '',
+          jobTitle: (member as { jobTitle?: string }).jobTitle,
+        }));
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Add a user to a security group
+   * @param groupId The Azure AD group ID
+   * @param userId The Azure AD user ID
+   */
+  public async addUserToGroup(groupId: string, userId: string): Promise<void> {
+    await this._graph.groups.getById(groupId).members.add(
+      `https://graph.microsoft.com/v1.0/directoryObjects/${userId}`
+    );
+  }
+
+  /**
+   * Remove a user from a security group
+   * @param groupId The Azure AD group ID
+   * @param userId The Azure AD user ID
+   */
+  public async removeUserFromGroup(groupId: string, userId: string): Promise<void> {
+    await this._graph.groups.getById(groupId).members.getById(userId).remove();
+  }
+
+  /**
+   * Search users and return with their Azure AD ID (needed for group operations)
+   * @param searchText Search query
+   */
+  public async searchUsersWithId(searchText: string): Promise<IGroupMember[]> {
+    if (!searchText || searchText.length < 2) {
+      return [];
+    }
+
+    try {
+      const users = await this._graph.users
+        .filter(`startswith(displayName,'${searchText}') or startswith(mail,'${searchText}') or startswith(userPrincipalName,'${searchText}')`)
+        .select('id', 'displayName', 'mail', 'userPrincipalName', 'jobTitle')
+        .top(10)();
+
+      return users.map((user) => ({
+        id: user.id || '',
+        displayName: user.displayName || '',
+        email: user.mail || user.userPrincipalName || '',
+        jobTitle: user.jobTitle || undefined,
+      }));
+    } catch {
+      return [];
+    }
   }
 }
 

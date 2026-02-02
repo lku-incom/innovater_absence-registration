@@ -26,8 +26,14 @@ import styles from './AbsenceRegistration.module.scss';
 import { IAdminPanelProps } from './IAbsenceRegistrationProps';
 import { IAbsenceRegistration, RegistrationStatus, IUserInfo } from '../models/IAbsenceRegistration';
 import { AccrualType, getHolidayYear, IAccrualHistory } from '../models/IHolidayBalance';
-import { GraphService } from '../services/GraphService';
+import { GraphService, IGroupMember } from '../services/GraphService';
 import AdminReport from './AdminReport';
+
+// Azure AD security group ID for holiday-eligible employees
+const HOLIDAY_ELIGIBLE_GROUP_ID = '775b14c1-65ed-472f-915d-6e88c446318a';
+
+// Number of group members to show initially
+const INITIAL_MEMBERS_TO_SHOW = 5;
 
 // Accrual type options for the dropdown (must match Dataverse option set values 100000000-100000003)
 const accrualTypeOptions: IDropdownOption[] = [
@@ -84,6 +90,8 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
     accrualHistoryCount,
     isLoading,
     onRefresh,
+    impersonatedUser,
+    onImpersonate,
   } = props;
 
   const [isDeleteAllDialogOpen, setIsDeleteAllDialogOpen] = useState<boolean>(false);
@@ -108,6 +116,29 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
   const [selectedUser, setSelectedUser] = useState<IUserInfo | undefined>(undefined);
   const searchInputRef = useRef<HTMLDivElement>(null);
   const searchTimeoutRef = useRef<number | undefined>(undefined);
+
+  // Group Management State
+  const [groupMembers, setGroupMembers] = useState<IGroupMember[]>([]);
+  const [isLoadingGroupMembers, setIsLoadingGroupMembers] = useState<boolean>(false);
+  const [groupUserSearchText, setGroupUserSearchText] = useState<string>('');
+  const [groupUserSearchResults, setGroupUserSearchResults] = useState<IGroupMember[]>([]);
+  const [isSearchingGroupUser, setIsSearchingGroupUser] = useState<boolean>(false);
+  const [showGroupUserDropdown, setShowGroupUserDropdown] = useState<boolean>(false);
+  const [isAddingToGroup, setIsAddingToGroup] = useState<boolean>(false);
+  const [isRemovingFromGroup, setIsRemovingFromGroup] = useState<string | undefined>(undefined);
+  const [groupError, setGroupError] = useState<string>('');
+  const [groupSuccess, setGroupSuccess] = useState<string>('');
+  const [showAllMembers, setShowAllMembers] = useState<boolean>(false);
+  const groupSearchInputRef = useRef<HTMLDivElement>(null);
+  const groupSearchTimeoutRef = useRef<number | undefined>(undefined);
+
+  // Impersonation Search State
+  const [impersonationSearchText, setImpersonationSearchText] = useState<string>('');
+  const [impersonationSearchResults, setImpersonationSearchResults] = useState<IGroupMember[]>([]);
+  const [isSearchingImpersonation, setIsSearchingImpersonation] = useState<boolean>(false);
+  const [showImpersonationDropdown, setShowImpersonationDropdown] = useState<boolean>(false);
+  const impersonationSearchInputRef = useRef<HTMLDivElement>(null);
+  const impersonationSearchTimeoutRef = useRef<number | undefined>(undefined);
 
   const getStatusBadgeClass = (status: RegistrationStatus): string => {
     switch (status) {
@@ -333,8 +364,175 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
       if (searchTimeoutRef.current) {
         window.clearTimeout(searchTimeoutRef.current);
       }
+      if (groupSearchTimeoutRef.current) {
+        window.clearTimeout(groupSearchTimeoutRef.current);
+      }
+      if (impersonationSearchTimeoutRef.current) {
+        window.clearTimeout(impersonationSearchTimeoutRef.current);
+      }
     };
   }, []);
+
+  // Group Management Handlers
+  const loadGroupMembers = useCallback(async (): Promise<void> => {
+    setIsLoadingGroupMembers(true);
+    setGroupError('');
+    try {
+      const graphService = GraphService.getInstance();
+      const members = await graphService.getGroupMembers(HOLIDAY_ELIGIBLE_GROUP_ID);
+      setGroupMembers(members);
+    } catch {
+      setGroupError('Kunne ikke hente gruppemedlemmer. Kontroller tilladelser.');
+      setGroupMembers([]);
+    } finally {
+      setIsLoadingGroupMembers(false);
+    }
+  }, []);
+
+  const handleGroupUserSearch = useCallback(async (searchText: string): Promise<void> => {
+    if (searchText.length < 2) {
+      setGroupUserSearchResults([]);
+      setShowGroupUserDropdown(false);
+      return;
+    }
+
+    setIsSearchingGroupUser(true);
+    try {
+      const graphService = GraphService.getInstance();
+      const results = await graphService.searchUsersWithId(searchText);
+      // Filter out users already in group
+      const filteredResults = results.filter(
+        (user) => !groupMembers.some((member) => member.id === user.id)
+      );
+      setGroupUserSearchResults(filteredResults);
+      setShowGroupUserDropdown(filteredResults.length > 0);
+    } catch {
+      setGroupUserSearchResults([]);
+    } finally {
+      setIsSearchingGroupUser(false);
+    }
+  }, [groupMembers]);
+
+  const handleGroupUserSearchChange = useCallback((
+    _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    newValue?: string
+  ): void => {
+    const value = newValue || '';
+    setGroupUserSearchText(value);
+
+    // Debounce search
+    if (groupSearchTimeoutRef.current) {
+      window.clearTimeout(groupSearchTimeoutRef.current);
+    }
+    groupSearchTimeoutRef.current = window.setTimeout(() => {
+      handleGroupUserSearch(value);
+    }, 300);
+  }, [handleGroupUserSearch]);
+
+  const handleAddUserToGroup = useCallback(async (user: IGroupMember): Promise<void> => {
+    setIsAddingToGroup(true);
+    setGroupError('');
+    setGroupSuccess('');
+    setShowGroupUserDropdown(false);
+    setGroupUserSearchText('');
+    setGroupUserSearchResults([]);
+
+    try {
+      const graphService = GraphService.getInstance();
+      await graphService.addUserToGroup(HOLIDAY_ELIGIBLE_GROUP_ID, user.id);
+      setGroupMembers((prev) => [...prev, user]);
+      setGroupSuccess(`${user.displayName} er tilføjet til gruppen`);
+    } catch {
+      setGroupError(`Kunne ikke tilføje ${user.displayName} til gruppen`);
+    } finally {
+      setIsAddingToGroup(false);
+    }
+  }, []);
+
+  const handleRemoveUserFromGroup = useCallback(async (user: IGroupMember): Promise<void> => {
+    setIsRemovingFromGroup(user.id);
+    setGroupError('');
+    setGroupSuccess('');
+
+    try {
+      const graphService = GraphService.getInstance();
+      await graphService.removeUserFromGroup(HOLIDAY_ELIGIBLE_GROUP_ID, user.id);
+      setGroupMembers((prev) => prev.filter((m) => m.id !== user.id));
+      setGroupSuccess(`${user.displayName} er fjernet fra gruppen`);
+    } catch {
+      setGroupError(`Kunne ikke fjerne ${user.displayName} fra gruppen`);
+    } finally {
+      setIsRemovingFromGroup(undefined);
+    }
+  }, []);
+
+  const handleGroupSearchBlur = useCallback((): void => {
+    // Delay hiding to allow click on dropdown item
+    setTimeout(() => {
+      setShowGroupUserDropdown(false);
+    }, 200);
+  }, []);
+
+  // Impersonation Search Handlers
+  const handleImpersonationSearch = useCallback(async (searchText: string): Promise<void> => {
+    if (searchText.length < 2) {
+      setImpersonationSearchResults([]);
+      setShowImpersonationDropdown(false);
+      return;
+    }
+
+    setIsSearchingImpersonation(true);
+    try {
+      const graphService = GraphService.getInstance();
+      const results = await graphService.searchUsersWithId(searchText);
+      setImpersonationSearchResults(results);
+      setShowImpersonationDropdown(results.length > 0);
+    } catch {
+      setImpersonationSearchResults([]);
+    } finally {
+      setIsSearchingImpersonation(false);
+    }
+  }, []);
+
+  const handleImpersonationSearchChange = useCallback((
+    _event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>,
+    newValue?: string
+  ): void => {
+    const value = newValue || '';
+    setImpersonationSearchText(value);
+
+    // Debounce search
+    if (impersonationSearchTimeoutRef.current) {
+      window.clearTimeout(impersonationSearchTimeoutRef.current);
+    }
+    impersonationSearchTimeoutRef.current = window.setTimeout(() => {
+      handleImpersonationSearch(value);
+    }, 300);
+  }, [handleImpersonationSearch]);
+
+  const handleSelectUserToImpersonate = useCallback((user: IGroupMember): void => {
+    setShowImpersonationDropdown(false);
+    setImpersonationSearchText('');
+    setImpersonationSearchResults([]);
+    onImpersonate({
+      id: 0,
+      email: user.email,
+      displayName: user.displayName,
+      jobTitle: user.jobTitle,
+    });
+  }, [onImpersonate]);
+
+  const handleImpersonationSearchBlur = useCallback((): void => {
+    // Delay hiding to allow click on dropdown item
+    setTimeout(() => {
+      setShowImpersonationDropdown(false);
+    }, 200);
+  }, []);
+
+  // Load group members on mount
+  useEffect(() => {
+    loadGroupMembers();
+  }, [loadGroupMembers]);
 
   const columns: IColumn[] = [
     {
@@ -430,6 +628,107 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
         Administratorfunktioner kan slette data permanent. Handlingerne kan ikke fortrydes.
       </MessageBar>
 
+      {/* User Impersonation Section */}
+      <div style={{
+        backgroundColor: impersonatedUser ? '#fff3cd' : '#f0f9ff',
+        borderRadius: 8,
+        padding: 20,
+        border: impersonatedUser ? '1px solid #ffc107' : '1px solid #b3d9ff',
+        marginBottom: 24,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon iconName="ContactInfo" />
+              Se appen som en anden bruger
+            </h3>
+            <p style={{ fontSize: 12, color: '#666', margin: '4px 0 0 0' }}>
+              Vælg en medarbejder for at se deres registreringer og feriesaldo (skrivebeskyttet)
+            </p>
+          </div>
+        </div>
+
+        {impersonatedUser ? (
+          <div style={{
+            backgroundColor: '#fff',
+            borderRadius: 6,
+            padding: 16,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+              <Icon iconName="Contact" style={{ fontSize: 24, color: '#856404' }} />
+              <div>
+                <div style={{ fontWeight: 600 }}>{impersonatedUser.displayName}</div>
+                <div style={{ fontSize: 12, color: '#666' }}>{impersonatedUser.email}</div>
+              </div>
+            </div>
+            <DefaultButton
+              text="Afslut visning"
+              iconProps={{ iconName: 'Cancel' }}
+              onClick={() => onImpersonate(undefined)}
+            />
+          </div>
+        ) : (
+          <div ref={impersonationSearchInputRef} style={{ position: 'relative', maxWidth: 400 }}>
+            <TextField
+              placeholder="Søg på navn eller e-mail..."
+              value={impersonationSearchText}
+              onChange={handleImpersonationSearchChange}
+              onBlur={handleImpersonationSearchBlur}
+              onFocus={() => impersonationSearchResults.length > 0 && setShowImpersonationDropdown(true)}
+              iconProps={isSearchingImpersonation ? undefined : { iconName: 'Search' }}
+              styles={{ root: { marginBottom: 0 } }}
+            />
+            {isSearchingImpersonation && (
+              <div style={{ position: 'absolute', right: 8, top: 8 }}>
+                <Spinner size={SpinnerSize.small} />
+              </div>
+            )}
+            {showImpersonationDropdown && impersonationSearchResults.length > 0 && impersonationSearchInputRef.current && (
+              <Callout
+                target={impersonationSearchInputRef.current}
+                isBeakVisible={false}
+                directionalHint={DirectionalHint.bottomLeftEdge}
+                onDismiss={() => setShowImpersonationDropdown(false)}
+                setInitialFocus={false}
+                styles={{
+                  root: { width: impersonationSearchInputRef.current.offsetWidth },
+                  calloutMain: { maxHeight: 300, overflowY: 'auto' },
+                }}
+              >
+                <List
+                  items={impersonationSearchResults}
+                  onRenderCell={(user) => user && (
+                    <div
+                      style={{
+                        padding: '10px 14px',
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #edebe9',
+                        transition: 'background-color 0.15s',
+                      }}
+                      onClick={() => handleSelectUserToImpersonate(user)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f2f1')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                    >
+                      <Persona
+                        text={user.displayName}
+                        secondaryText={user.email}
+                        tertiaryText={user.jobTitle}
+                        size={PersonaSize.size32}
+                        showSecondaryText
+                      />
+                    </div>
+                  )}
+                />
+              </Callout>
+            )}
+          </div>
+        )}
+      </div>
+
       {deleteResult && (
         <MessageBar
           messageBarType={deleteResult.type}
@@ -439,6 +738,185 @@ const AdminPanel: React.FC<IAdminPanelProps> = (props) => {
           {deleteResult.message}
         </MessageBar>
       )}
+
+      {/* Group Management Section - At the top */}
+      <div style={{
+        backgroundColor: '#fafafa',
+        borderRadius: 8,
+        padding: 20,
+        border: '1px solid #e0e0e0',
+        marginBottom: 24,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Icon iconName="Group" />
+              Ferieberettigede medarbejdere
+            </h3>
+            <p style={{ fontSize: 12, color: '#666', margin: '4px 0 0 0' }}>
+              Medarbejdere der modtager månedlig ferieoptjening via Power Automate
+            </p>
+          </div>
+          <DefaultButton
+            iconProps={{ iconName: 'Refresh' }}
+            text="Opdater"
+            onClick={loadGroupMembers}
+            disabled={isLoadingGroupMembers}
+          />
+        </div>
+
+        {groupError && (
+          <MessageBar
+            messageBarType={MessageBarType.error}
+            onDismiss={() => setGroupError('')}
+            style={{ marginBottom: 12 }}
+          >
+            {groupError}
+          </MessageBar>
+        )}
+
+        {groupSuccess && (
+          <MessageBar
+            messageBarType={MessageBarType.success}
+            onDismiss={() => setGroupSuccess('')}
+            style={{ marginBottom: 12 }}
+          >
+            {groupSuccess}
+          </MessageBar>
+        )}
+
+        {/* Add User to Group */}
+        <div style={{ marginBottom: 16 }}>
+          <div ref={groupSearchInputRef} style={{ position: 'relative', maxWidth: 350 }}>
+            <TextField
+              placeholder="Tilføj medarbejder (søg på navn eller e-mail)..."
+              value={groupUserSearchText}
+              onChange={handleGroupUserSearchChange}
+              onBlur={handleGroupSearchBlur}
+              onFocus={() => groupUserSearchResults.length > 0 && setShowGroupUserDropdown(true)}
+              disabled={isAddingToGroup || isLoadingGroupMembers}
+              iconProps={isSearchingGroupUser ? undefined : { iconName: 'AddFriend' }}
+              styles={{ root: { marginBottom: 0 } }}
+            />
+            {isSearchingGroupUser && (
+              <div style={{ position: 'absolute', right: 8, top: 8 }}>
+                <Spinner size={SpinnerSize.small} />
+              </div>
+            )}
+            {showGroupUserDropdown && groupUserSearchResults.length > 0 && groupSearchInputRef.current && (
+              <Callout
+                target={groupSearchInputRef.current}
+                isBeakVisible={false}
+                directionalHint={DirectionalHint.bottomLeftEdge}
+                onDismiss={() => setShowGroupUserDropdown(false)}
+                setInitialFocus={false}
+                styles={{
+                  root: { width: groupSearchInputRef.current.offsetWidth },
+                  calloutMain: { maxHeight: 300, overflowY: 'auto' },
+                }}
+              >
+                <List
+                  items={groupUserSearchResults}
+                  onRenderCell={(user) => user && (
+                    <div
+                      style={{
+                        padding: '10px 14px',
+                        cursor: 'pointer',
+                        borderBottom: '1px solid #edebe9',
+                        transition: 'background-color 0.15s',
+                      }}
+                      onClick={() => handleAddUserToGroup(user)}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#f3f2f1')}
+                      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                    >
+                      <Persona
+                        text={user.displayName}
+                        secondaryText={user.email}
+                        tertiaryText={user.jobTitle}
+                        size={PersonaSize.size32}
+                        showSecondaryText
+                      />
+                    </div>
+                  )}
+                />
+              </Callout>
+            )}
+          </div>
+        </div>
+
+        {/* Group Members List */}
+        {isLoadingGroupMembers ? (
+          <div style={{ padding: 16, textAlign: 'center' }}>
+            <Spinner size={SpinnerSize.small} label="Henter..." />
+          </div>
+        ) : groupMembers.length === 0 ? (
+          <div style={{
+            padding: 16,
+            textAlign: 'center',
+            color: '#666',
+            backgroundColor: '#fff',
+            borderRadius: 6,
+            border: '1px dashed #c8c8c8',
+          }}>
+            <Icon iconName="Group" style={{ fontSize: 20, marginBottom: 4 }} />
+            <div style={{ fontSize: 13 }}>Ingen medlemmer i gruppen</div>
+          </div>
+        ) : (
+          <>
+            <div style={{ fontSize: 12, color: '#666', marginBottom: 8 }}>
+              <strong>{groupMembers.length}</strong> medlemmer
+            </div>
+            <div style={{
+              backgroundColor: '#fff',
+              borderRadius: 6,
+              border: '1px solid #e0e0e0',
+            }}>
+              {(showAllMembers ? groupMembers : groupMembers.slice(0, INITIAL_MEMBERS_TO_SHOW)).map((member) => (
+                <div
+                  key={member.id}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    padding: '8px 12px',
+                    borderBottom: '1px solid #edebe9',
+                  }}
+                >
+                  <Persona
+                    text={member.displayName}
+                    secondaryText={member.email}
+                    size={PersonaSize.size24}
+                    showSecondaryText
+                  />
+                  <IconButton
+                    iconProps={{ iconName: 'Cancel' }}
+                    title="Fjern fra gruppe"
+                    ariaLabel={`Fjern ${member.displayName} fra gruppe`}
+                    onClick={() => handleRemoveUserFromGroup(member)}
+                    disabled={isRemovingFromGroup === member.id}
+                    styles={{
+                      root: { color: '#c0392b', width: 28, height: 28 },
+                      rootHovered: { color: '#a93226', backgroundColor: '#fce4e4' },
+                      icon: { fontSize: 12 },
+                    }}
+                  />
+                </div>
+              ))}
+            </div>
+            {groupMembers.length > INITIAL_MEMBERS_TO_SHOW && (
+              <DefaultButton
+                text={showAllMembers ? `Vis færre` : `Vis alle ${groupMembers.length} medlemmer`}
+                iconProps={{ iconName: showAllMembers ? 'ChevronUp' : 'ChevronDown' }}
+                onClick={() => setShowAllMembers(!showAllMembers)}
+                styles={{
+                  root: { marginTop: 8, width: '100%' },
+                }}
+              />
+            )}
+          </>
+        )}
+      </div>
 
       {/* Report Section */}
       <div

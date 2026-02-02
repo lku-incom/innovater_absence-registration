@@ -1,0 +1,255 @@
+{
+  "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "$connections": {
+      "defaultValue": {},
+      "type": "Object"
+    }
+  },
+  "triggers": {
+    "Recurrence_-_Monthly_on_1st": {
+      "type": "Recurrence",
+      "recurrence": {
+        "frequency": "Month",
+        "interval": 1,
+        "schedule": {
+          "monthDays": [1],
+          "hours": ["6"],
+          "minutes": [0]
+        },
+        "timeZone": "Romance Standard Time"
+      },
+      "description": "Runs on the 1st of every month at 06:00 CET/CEST"
+    }
+  },
+  "actions": {
+    "Initialize_variable_-_Current_Date": {
+      "runAfter": {},
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "CurrentDate",
+            "type": "string",
+            "value": "@{utcNow()}"
+          }
+        ]
+      }
+    },
+    "Initialize_variable_-_Current_Month": {
+      "runAfter": {
+        "Initialize_variable_-_Current_Date": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "CurrentMonth",
+            "type": "integer",
+            "value": "@int(formatDateTime(utcNow(), 'MM'))"
+          }
+        ]
+      }
+    },
+    "Initialize_variable_-_Current_Year": {
+      "runAfter": {
+        "Initialize_variable_-_Current_Month": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "CurrentYear",
+            "type": "integer",
+            "value": "@int(formatDateTime(utcNow(), 'yyyy'))"
+          }
+        ]
+      }
+    },
+    "Initialize_variable_-_Holiday_Year": {
+      "runAfter": {
+        "Initialize_variable_-_Current_Year": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "HolidayYear",
+            "type": "string",
+            "value": "@{if(greaterOrEquals(variables('CurrentMonth'), 9), concat(variables('CurrentYear'), '-', add(variables('CurrentYear'), 1)), concat(sub(variables('CurrentYear'), 1), '-', variables('CurrentYear')))}"
+          }
+        ]
+      },
+      "description": "Calculate holiday year: Sept-Aug cycle. Sept+ = current-next year, Jan-Aug = previous-current year"
+    },
+    "Initialize_variable_-_Is_January": {
+      "runAfter": {
+        "Initialize_variable_-_Holiday_Year": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "IsJanuary",
+            "type": "boolean",
+            "value": "@equals(variables('CurrentMonth'), 1)"
+          }
+        ]
+      },
+      "description": "Check if it's January to add Feriefridage"
+    },
+    "Initialize_variable_-_Processed_Count": {
+      "runAfter": {
+        "Initialize_variable_-_Is_January": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "ProcessedCount",
+            "type": "integer",
+            "value": 0
+          }
+        ]
+      }
+    },
+    "Initialize_variable_-_Error_Count": {
+      "runAfter": {
+        "Initialize_variable_-_Processed_Count": ["Succeeded"]
+      },
+      "type": "InitializeVariable",
+      "inputs": {
+        "variables": [
+          {
+            "name": "ErrorCount",
+            "type": "integer",
+            "value": 0
+          }
+        ]
+      }
+    },
+    "Get_all_users_from_Azure_AD": {
+      "runAfter": {
+        "Initialize_variable_-_Error_Count": ["Succeeded"]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_office365users",
+          "operationId": "SearchUser_V2",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365users"
+        },
+        "parameters": {
+          "$filter": "accountEnabled eq true",
+          "$top": 999
+        },
+        "authentication": "@parameters('$connections')['shared_office365users']['connectionId']"
+      },
+      "description": "Get all active users from Azure AD. Adjust filter as needed for your organization."
+    },
+    "Apply_to_each_user": {
+      "runAfter": {
+        "Get_all_users_from_Azure_AD": ["Succeeded"]
+      },
+      "type": "Foreach",
+      "foreach": "@outputs('Get_all_users_from_Azure_AD')?['body/value']",
+      "actions": {
+        "Condition_-_Skip_external_users": {
+          "type": "If",
+          "expression": {
+            "and": [
+              {
+                "not": {
+                  "contains": [
+                    "@items('Apply_to_each_user')?['mail']",
+                    "#EXT#"
+                  ]
+                }
+              },
+              {
+                "not": {
+                  "equals": [
+                    "@items('Apply_to_each_user')?['mail']",
+                    null
+                  ]
+                }
+              }
+            ]
+          },
+          "actions": {
+            "Create_accrual_history_record": {
+              "runAfter": {},
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "cr_accrualhistories",
+                  "item/cr_name": "@{items('Apply_to_each_user')?['displayName']} - Månedlig optjening - @{formatDateTime(utcNow(), 'MMM yyyy')}",
+                  "item/cr_employeeemail": "@items('Apply_to_each_user')?['mail']",
+                  "item/cr_employeename": "@items('Apply_to_each_user')?['displayName']",
+                  "item/cr_holidayyear": "@variables('HolidayYear')",
+                  "item/cr_accrualdate": "@variables('CurrentDate')",
+                  "item/cr_accrualmonth": "@variables('CurrentMonth')",
+                  "item/cr_accrualyear": "@variables('CurrentYear')",
+                  "item/cr_daysaccrued": 2.08,
+                  "item/cr_feriefridageaccrued": "@if(variables('IsJanuary'), 5, 0)",
+                  "item/cr_accrualtype": 100000000,
+                  "item/cr_notes": "@{if(variables('IsJanuary'), 'Månedlig ferieoptjening (2.08 dage) + Årlig feriefridage (5 dage)', 'Månedlig ferieoptjening (2.08 dage)')}"
+                },
+                "authentication": "@parameters('$connections')['shared_commondataserviceforapps']['connectionId']"
+              },
+              "description": "Creates accrual record: 2.08 feriedage monthly, +5 feriefridage in January"
+            },
+            "Increment_processed_count": {
+              "runAfter": {
+                "Create_accrual_history_record": ["Succeeded"]
+              },
+              "type": "IncrementVariable",
+              "inputs": {
+                "name": "ProcessedCount",
+                "value": 1
+              }
+            }
+          },
+          "else": {
+            "actions": {}
+          },
+          "description": "Skip guest/external users and users without email"
+        }
+      },
+      "runtimeConfiguration": {
+        "concurrency": {
+          "repetitions": 20
+        }
+      },
+      "description": "Process each user in parallel (20 concurrent)"
+    },
+    "Send_summary_email": {
+      "runAfter": {
+        "Apply_to_each_user": ["Succeeded", "Failed"]
+      },
+      "type": "OpenApiConnection",
+      "inputs": {
+        "host": {
+          "connectionName": "shared_office365",
+          "operationId": "SendEmailV2",
+          "apiId": "/providers/Microsoft.PowerApps/apis/shared_office365"
+        },
+        "parameters": {
+          "emailMessage/To": "hr@innovater.dk",
+          "emailMessage/Subject": "Månedlig ferieoptjening kørt - @{formatDateTime(utcNow(), 'MMMM yyyy')}",
+          "emailMessage/Body": "<html><body><h2>Månedlig ferieoptjening er gennemført</h2><p><strong>Dato:</strong> @{formatDateTime(utcNow(), 'dd-MM-yyyy HH:mm')}</p><p><strong>Ferieår:</strong> @{variables('HolidayYear')}</p><p><strong>Måned:</strong> @{formatDateTime(utcNow(), 'MMMM yyyy')}</p><hr/><h3>Resultat</h3><ul><li><strong>Antal medarbejdere behandlet:</strong> @{variables('ProcessedCount')}</li><li><strong>Feriedage tilføjet per medarbejder:</strong> 2.08 dage</li>@{if(variables('IsJanuary'), '<li><strong>Feriefridage tilføjet per medarbejder:</strong> 5 dage (årlig tildeling)</li>', '')}</ul><p>Denne e-mail er automatisk genereret af Power Automate.</p></body></html>",
+          "emailMessage/Importance": "Normal"
+        },
+        "authentication": "@parameters('$connections')['shared_office365']['connectionId']"
+      },
+      "description": "Send summary email to HR after processing"
+    }
+  },
+  "outputs": {}
+}

@@ -77,4 +77,7 @@ export interface IAdminPanelProps {
   accrualHistoryCount: number;
   isLoading: boolean;
   onRefresh: () => void;
+  // Impersonation props
+  impersonatedUser?: IUserInfo;
+  onImpersonate: (user: IUserInfo | undefined) => void;
 }
